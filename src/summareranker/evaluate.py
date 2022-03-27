@@ -4,7 +4,7 @@ import argparse
 import sys
 import time
 
-sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/")
+sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/")
 
 from tqdm import tqdm
 
