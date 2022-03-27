@@ -7,13 +7,14 @@ import time
 sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/")
 
 from tqdm import tqdm
+from transformers import RobertaTokenizerFast, RobertaModel
 
 from common.utils import seed_everything
 from common.evaluation import *
 from common.data_scored import load_data
 from utils import *
 from dataset import MultitaskRerankingDataset
-from training_utils import *
+#from training_utils import *
 from model import ModelMultitaskBinary
 
 
@@ -50,7 +51,7 @@ parser.add_argument('--pos_neg_construction', type = str, default = "overall_sum
 parser.add_argument('--sharp_pos', type=bool, default = False)
 # encoder
 parser.add_argument('--model', type=str, default = "roberta-large") 
-parser.add_argument('--model_type', type=str, default = "roberta") 
+#parser.add_argument('--model_type', type=str, default = "roberta") 
 parser.add_argument('--cache_dir', type=str, default = "/data/mathieu/hf_models/roberta-large/")
 parser.add_argument('--hidden_size', type=int, default = 1024) 
 parser.add_argument('--non_linear_repres', type=bool, default = True)
@@ -125,7 +126,8 @@ def main(args):
     print("Using device: {}".format(device))
 
     # tokenizer
-    tokenizer = build_tokenizer(args)
+    #tokenizer = build_tokenizer(args)
+    tokenizer = RobertaTokenizerFast.from_pretrained(args.model, cache_dir = args.cache_dir)
 
     # data
     set = args.val_dataset
@@ -148,7 +150,8 @@ def main(args):
     val_loader = torch.utils.data.DataLoader(val_dataset, batch_size = args.inference_bs, shuffle = False)
 
     # model
-    pretrained_model = build_model(args)
+    #pretrained_model = build_model(args)
+    pretrained_model = RobertaModel.from_pretrained(args.model, cache_dir = args.cache_dir)
     n_params = sum(p.numel() for p in pretrained_model.parameters() if p.requires_grad)
     print("\nThe base LM has {} trainable parameters".format(n_params))
     model = ModelMultitaskBinary(pretrained_model, tokenizer, args)
