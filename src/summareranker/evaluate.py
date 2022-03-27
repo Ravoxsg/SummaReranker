@@ -3,6 +3,7 @@
 import argparse
 import sys
 import time
+import torch
 
 sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/")
 
@@ -14,7 +15,6 @@ from common.evaluation import *
 from common.data_scored import load_data
 from utils import *
 from dataset import MultitaskRerankingDataset
-#from training_utils import *
 from model import ModelMultitaskBinary
 
 
@@ -46,26 +46,19 @@ parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1"
 parser.add_argument('--num_beams', type=int, default = 15)
 
 # model
-## candidate selection
 parser.add_argument('--pos_neg_construction', type = str, default = "overall_sum_mean") # in ["overall_sum_mean", "overall_sum", "per_task", "unique_task"]
 parser.add_argument('--sharp_pos', type=bool, default = False)
-# encoder
-parser.add_argument('--model', type=str, default = "roberta-large") 
-#parser.add_argument('--model_type', type=str, default = "roberta") 
+parser.add_argument('--model', type=str, default = "roberta-large")  
 parser.add_argument('--cache_dir', type=str, default = "/data/mathieu/hf_models/roberta-large/")
 parser.add_argument('--hidden_size', type=int, default = 1024) 
 parser.add_argument('--non_linear_repres', type=bool, default = True)
-# shared bottom
 parser.add_argument('--use_shared_bottom', type = bool, default = True)
 parser.add_argument('--bottom_hidden_size', type = int, default = 1024)
-# experts
 parser.add_argument('--num_experts', type=int, default = 6)
 parser.add_argument('--k', type=int, default = 3)
 parser.add_argument('--use_aux_loss', type = bool, default = False)
 parser.add_argument('--expert_hidden_size', type = int, default = 1024)
-# tower
 parser.add_argument('--tower_hidden_size', type = int, default = 1024)
-# weights
 parser.add_argument('--load_model', type=bool, default = True)
 parser.add_argument('--load_model_path', type=str, default = "/data/mathieu/2nd_stage_summarization/4_supervised_multitask_reranking/saved_models/reddit/multitask_3_tasks_ablation_5/checkpoint-1000/pytorch_model.bin")
 
@@ -126,7 +119,6 @@ def main(args):
     print("Using device: {}".format(device))
 
     # tokenizer
-    #tokenizer = build_tokenizer(args)
     tokenizer = RobertaTokenizerFast.from_pretrained(args.model, cache_dir = args.cache_dir)
 
     # data
@@ -150,7 +142,6 @@ def main(args):
     val_loader = torch.utils.data.DataLoader(val_dataset, batch_size = args.inference_bs, shuffle = False)
 
     # model
-    #pretrained_model = build_model(args)
     pretrained_model = RobertaModel.from_pretrained(args.model, cache_dir = args.cache_dir)
     n_params = sum(p.numel() for p in pretrained_model.parameters() if p.requires_grad)
     print("\nThe base LM has {} trainable parameters".format(n_params))
