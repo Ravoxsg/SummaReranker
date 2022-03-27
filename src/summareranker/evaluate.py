@@ -15,7 +15,6 @@ from utils import *
 from dataset import MultitaskRerankingDataset
 from training_utils import *
 from model import ModelMultitaskBinary
-from evaluation_utils import *
 
 
 
@@ -25,10 +24,10 @@ parser.add_argument('--seed', type=int, default = 42)
 parser.add_argument('--cuda', type=bool, default = True)
 
 # data
-parser.add_argument('--dataset', type=str, default = "cnndm", 
+parser.add_argument('--dataset', type=str, default = "reddit", 
                     choices= ["cnndm", "xsum", "reddit"]) 
 parser.add_argument('--data_folder', type=str, default = "/data/mathieu/DATASETS/RedditTIFU/data/") # CNNDM / XSum / RedditTIFU
-parser.add_argument('--generation_methods', type = list, default = "1_beam_search",
+parser.add_argument('--generation_methods', type = list, default = ["1_beam_search"],
                     choices = ["1_beam_search", "2_diverse_beam_search", "3_top_p_sampling", "4_top_k_sampling"]
 )
 parser.add_argument('--scoring_methods', type=list, default = ["1a_rouge_1", "1b_rouge_2", "1c_rouge_l"]) 
@@ -37,7 +36,7 @@ parser.add_argument('--sep_symbol', type=str, default = "[SEP]")
 parser.add_argument('--highlights', type = bool, default = False) 
 parser.add_argument('--val_dataset', type=str, default = "small_val",
                     choices = ["small_val", "val", "test"]) 
-parser.add_argument('--val_size', type=int, default = 100) 
+parser.add_argument('--val_size', type=int, default = 300) 
 
 # base model
 parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1",
@@ -95,7 +94,7 @@ max_lengths = [384, 448, 384]
 max_summary_lengths = [128, 64, 128]
 clean_ns = [True, False, False]
 
-idx = dataset_names.index(args.dataset_name)
+idx = dataset_names.index(args.dataset)
 
 args.highlights = highlights[idx]
 if args.val_dataset == "small_val":
