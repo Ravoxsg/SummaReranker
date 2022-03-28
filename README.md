@@ -9,6 +9,7 @@ Accepted for publication at ACL 2022.
 
 ### 1 - Download the code
 ```
-git clone
+git clone https://github.com/Ravoxsg/SummaReranker.git
+cd SummaReranker
 ```
 
