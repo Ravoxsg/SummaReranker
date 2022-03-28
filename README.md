@@ -6,3 +6,7 @@ Mathieu Ravaut, Shafiq Joty, Nancy F. Chen.
 Accepted for publication at ACL 2022. 
 
 ## Setup
+
+### 1 - Download the code
+
+
