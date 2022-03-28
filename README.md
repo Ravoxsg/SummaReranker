@@ -15,5 +15,7 @@ cd SummaReranker
 
 ### 2 - Install the dependencies
 ```
-conda create --name summa_reranker --file requirements.txt
+conda create --name summa_reranker python=3.8.8
+conda activate summa_reranker
+pip install -r requirements.txt
 ```
