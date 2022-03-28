@@ -8,5 +8,7 @@ Accepted for publication at ACL 2022.
 ## Setup
 
 ### 1 - Download the code
-
+'''
+git clone
+'''
 
