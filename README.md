@@ -13,3 +13,7 @@ git clone https://github.com/Ravoxsg/SummaReranker.git
 cd SummaReranker
 ```
 
+### 2 - Install the dependencies
+```
+conda create --name summa_reranker --file requirements.txt
+```
