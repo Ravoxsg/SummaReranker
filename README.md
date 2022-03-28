@@ -4,3 +4,16 @@ Source code for the paper <a href="https://arxiv.org/pdf/2203.06569.pdf" style =
 Mathieu Ravaut, Shafiq Joty, Nancy F. Chen.
 
 Accepted for publication at ACL 2022. 
+
+## Setup
+
+### 1 - Download the code
+```
+git clone https://github.com/Ravoxsg/SummaReranker.git
+cd SummaReranker
+```
+
+### 2 - Install the dependencies
+```
+conda create --name summa_reranker --file requirements.txt
+```
