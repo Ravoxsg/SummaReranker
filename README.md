@@ -50,6 +50,7 @@ XSum checkpoint (trained on beam search + diverse beam search candidates, for RO
 Reddit checkpoint (trained on beam search + diverse beam search candidates, for ROUGE-1/2/L metrics):  
 
 ### 2 - Run SummaReranker
+For instance, to run SummaReranker trained for ROUGE-1/2/L on PEGASUS beam search candidates on 300 validation samples on Reddit:
 ```
 cd ../summareranker/
 CUDA_VISIBLE_DEVICES=0 bash evaluate.sh
