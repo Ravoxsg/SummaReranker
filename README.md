@@ -42,3 +42,16 @@ CUDA_VISIBLE_DEVICES=0 bash scores.sh
 ```
 Scoring all candidates should take a few minutes with ROUGE metrics on the test set of CNN/DM, XSum or Reddit. 
 
+## Run SummaReranker
+
+### 1 - Download the model checkpoint
+CNN/DM checkpoint (trained on beam search + diverse beam search candidates):
+XSum checkpoint (trained on beam search + diverse beam search candidates):
+Reddit checkpoint (trained on beam search + diverse beam search candidates):
+
+### 2 - Run SummaReranker
+```
+cd ../summareranker/
+CUDA_VISIBLE_DEVICES=0 bash evaluate.sh
+```
+Make sure that the argument --load_model_path points to where you placed the SummaReranker checkpoint. 
