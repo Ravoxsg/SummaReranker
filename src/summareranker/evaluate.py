@@ -46,7 +46,6 @@ parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1"
 parser.add_argument('--num_beams', type=int, default = 15)
 
 # model
-parser.add_argument('--pos_neg_construction', type = str, default = "overall_sum_mean") # in ["overall_sum_mean", "overall_sum", "per_task", "unique_task"]
 parser.add_argument('--sharp_pos', type=bool, default = False)
 parser.add_argument('--model', type=str, default = "roberta-large")  
 parser.add_argument('--cache_dir', type=str, default = "/data/mathieu/hf_models/roberta-large/")
