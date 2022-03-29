@@ -45,9 +45,9 @@ Scoring all candidates should take a few minutes with ROUGE metrics on the test 
 ## Run SummaReranker
 
 ### 1 - Download the model checkpoint
-CNN/DM checkpoint (trained on beam search + diverse beam search candidates):
-XSum checkpoint (trained on beam search + diverse beam search candidates):
-Reddit checkpoint (trained on beam search + diverse beam search candidates):
+CNN/DM checkpoint (trained on beam search + diverse beam search candidates):  
+XSum checkpoint (trained on beam search + diverse beam search candidates):  
+Reddit checkpoint (trained on beam search + diverse beam search candidates):  
 
 ### 2 - Run SummaReranker
 ```
