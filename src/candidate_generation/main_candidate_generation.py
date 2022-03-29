@@ -45,7 +45,6 @@ parser.add_argument('--ft_model', type = bool, default = True)
 # summary generation
 parser.add_argument('--val_dataset', type=str, default = "small_val",
                     choices = ["small_val", "val", "test"]) 
-parser.add_argument('--val_size', type=int, default = 300) 
 parser.add_argument('--inference_bs', type = int, default = 2) 
 parser.add_argument('--save_summaries', type = bool, default = False)
 parser.add_argument('--save_summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/")
