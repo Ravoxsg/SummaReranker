@@ -6,8 +6,6 @@ import sys
 
 sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/")
 
-from transformers import AutoTokenizer, AutoModel
-
 from common.utils import *
 from common.evaluation import *
 from common.data import load_data
