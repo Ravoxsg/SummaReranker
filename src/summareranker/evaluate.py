@@ -34,7 +34,6 @@ parser.add_argument('--generation_methods', type = list, default = ["1_beam_sear
 parser.add_argument('--scoring_methods', type=list, default = ["1a_rouge_1", "1b_rouge_2", "1c_rouge_l"]) 
 parser.add_argument('--scored_summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/reranking_data/Reddit/") 
 parser.add_argument('--sep_symbol', type=str, default = "[SEP]")
-parser.add_argument('--highlights', type = bool, default = False) 
 parser.add_argument('--val_dataset', type=str, default = "small_val",
                     choices = ["small_val", "val", "test"]) 
 parser.add_argument('--val_size', type=int, default = 300) 
