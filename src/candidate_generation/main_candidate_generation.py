@@ -49,9 +49,9 @@ parser.add_argument('--val_dataset', type=str, default = "small_val",
                     choices = ["small_val", "val", "test"]) 
 parser.add_argument('--val_size', type=int, default = 300) 
 parser.add_argument('--inference_bs', type = int, default = 2) 
-parser.add_argument('--save_summaries', type = bool, default = True)
+parser.add_argument('--save_summaries', type = bool, default = False)
 parser.add_argument('--save_summaries_path', type = str, default = "../summaries/Reddit/2_diverse_beam_search/")
-parser.add_argument('--generation_method', type = str, default = "diverse_beam_search"
+parser.add_argument('--generation_method', type = str, default = "diverse_beam_search",
                     choices = ["beam_search", "diverse_beam_search", "top_p_sampling", "top_k_sampling"])
 parser.add_argument('--num_return_sequences', type = int, default = 15) # default: 15
 parser.add_argument('--num_beams', type = int, default = 15) # for beam search
