@@ -31,7 +31,6 @@ parser.add_argument('--dataset', type=str, default = "reddit",
 parser.add_argument('--summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/") 
 parser.add_argument('--val_dataset', type = str, default = "small_val",
                     choices = ["small_val", "val", "test"]) 
-parser.add_argument('--size_to_score', type = int, default = 13368)
 
 # model
 parser.add_argument('--model_name', type = str, default = "pegasus_reddit_train_1",
@@ -106,9 +105,6 @@ def main(args):
     with open(labels_path, "rb") as f:
         labels = pickle.load(f)
     print("Loaded {} labels".format(len(labels)))
-
-    summaries = summaries[:args.size_to_score]
-    labels = labels[:args.size_to_score]
 
     # score summaries against the labels
     print("\nSCORING SUMMARIES WITH: {}".format(args.label_metric))
