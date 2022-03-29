@@ -46,7 +46,7 @@ Scoring all candidates should take a few minutes with ROUGE metrics on the test 
 
 ### 1 - Download the model checkpoint
 CNN/DM checkpoint (trained on beam search + diverse beam search candidates, for ROUGE-1/2/L metrics): <a href="https://drive.google.com/file/d/1aHX6Piehyp2hV59le-ccsmR56pUbOttx/view?usp=sharing" style = "text-decoration:none;color:#4682B4">here</a>  
-XSum checkpoint (trained on beam search + diverse beam search candidates, for ROUGE-1/2/L metrics): <a href="https://drive.google.com/file/d/1aHX6Piehyp2hV59le-ccsmR56pUbOttx/view?usp=sharing" style = "text-decoration:none;color:#4682B4">here</a>   
+XSum checkpoint (trained on beam search + diverse beam search candidates, for ROUGE-1/2/L metrics): <a href="https://drive.google.com/file/d/1bwlpqFixw1iLXrOxIOB3GjuQSNeHG9_6/view?usp=sharing" style = "text-decoration:none;color:#4682B4">here</a>   
 Reddit checkpoint (trained on beam search + diverse beam search candidates, for ROUGE-1/2/L metrics): <a href="https://drive.google.com/file/d/11aXfXtVNGOpawNUHBqSp-gaot9-NexGG/view?usp=sharing" style = "text-decoration:none;color:#4682B4">here</a>  
 
 ### 2 - Run SummaReranker
