@@ -37,7 +37,7 @@ parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1"
                     choices = ["pegasus_cnndm", "bart_cnndm", "pegasus_xsum", "bart_xsum", 
                     "pegasus_reddit_train_1", "bart_reddit"])
 parser.add_argument('--hidden_size', type = int, default = 768) # 768 / 1024`
-parser.add_argument('--cache_dir', type = str, default = "../../hf_models/pegasus-large-reddit/") 
+parser.add_argument('--cache_dir', type = str, default = "/data/mathieu/hf_models/pegasus-large-reddit/") 
 parser.add_argument('--load_model', type = bool, default = True)
 parser.add_argument('--load_model_path', type = str, default = "/data/mathieu/2nd_stage_summarization/1_base_finetuning/ft_saved_models/pegasus_reddit_train_1/checkpoint-1250/pytorch_model.bin")
 parser.add_argument('--ft_model', type = bool, default = True)
@@ -48,7 +48,7 @@ parser.add_argument('--val_dataset', type=str, default = "small_val",
 parser.add_argument('--val_size', type=int, default = 300) 
 parser.add_argument('--inference_bs', type = int, default = 2) 
 parser.add_argument('--save_summaries', type = bool, default = False)
-parser.add_argument('--save_summaries_path', type = str, default = "../summaries/Reddit/2_diverse_beam_search/")
+parser.add_argument('--save_summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/")
 parser.add_argument('--generation_method', type = str, default = "diverse_beam_search",
                     choices = ["beam_search", "diverse_beam_search", "top_p_sampling", "top_k_sampling"])
 parser.add_argument('--num_return_sequences', type = int, default = 15) # default: 15
@@ -84,12 +84,11 @@ idx = dataset_names.index(args.dataset)
 
 args.highlights = highlights[idx]
 if args.val_dataset == "small_val":
-    args.val_data_size = 300
+    args.val_dataset_size = 300
 elif args.val_dataset == "val":
-    args.val_data_size = val_data_sizes[idx]
+    args.val_dataset_size = val_data_sizes[idx]
 elif args.val_dataset == "test":
-    args.val_data_size = test_data_sizes[idx]
-args.test_data_size = test_data_sizes[idx]
+    args.val_dataset_size = test_data_sizes[idx]
 args.max_length = max_lengths[idx]
 args.max_summary_length = max_summary_lengths[idx]
 args.clean_n = clean_ns[idx]
@@ -123,21 +122,17 @@ def main(args):
     tokenizer = build_tokenizer(args)
 
     # datasets
-    datasets = []
-    for x in [(args.val_dataset, val_data)]:
-        mode, data = x
-        texts, summaries = data
-        print(len(texts), len(summaries))
-        texts = texts[:args.val_data_size]
-        summaries = summaries[:args.val_data_size]
-        print(len(texts), len(summaries))
-        if args.debug:
-            texts = texts[:args.debug_size]
-            summaries = summaries[:args.debug_size]
-        dataset = Dataset(mode, tokenizer, texts, summaries, args)
-        print("Total size of dataset: {}".format(len(texts)))
-        datasets.append(dataset)
-    val_dataset = datasets[0]
+    mode = "val"
+    texts, summaries = val_data
+    print(len(texts), len(summaries))
+    texts = texts[:args.val_dataset_size]
+    summaries = summaries[:args.val_dataset_size]
+    print(len(texts), len(summaries))
+    if args.debug:
+        texts = texts[:args.debug_size]
+        summaries = summaries[:args.debug_size]
+    val_dataset = Dataset(mode, tokenizer, texts, summaries, args)
+    print("Total size of dataset: {}".format(len(texts)))
 
     # data loader
     val_loader = torch.utils.data.DataLoader(val_dataset, batch_size = args.inference_bs, shuffle = False)

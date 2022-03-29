@@ -28,8 +28,8 @@ parser.add_argument('--cuda', type = bool, default = True)
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", 
                     choices= ["cnndm", "xsum", "reddit"]) 
-parser.add_argument('--summaries_path', type = str, default = "../summaries/Reddit/2_diverse_beam_search/") 
-parser.add_argument('--val_dataset', type = str, default = "val",
+parser.add_argument('--summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/") 
+parser.add_argument('--val_dataset', type = str, default = "small_val",
                     choices = ["small_val", "val", "test"]) 
 parser.add_argument('--size_to_score', type = int, default = 13368)
 
@@ -48,7 +48,7 @@ parser.add_argument('--stemmer', type = bool, default = True)
 
 # export
 parser.add_argument('--save_scores', type = bool, default = False)
-parser.add_argument('--scored_summaries_path', type = str, default = "../reranking_data/CNNDM/2_diverse_beam_search/1c_rouge_l/")
+parser.add_argument('--scored_summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/reranking_data/Reddit/2_diverse_beam_search/1c_rouge_l/")
 
 # metrics
 parser.add_argument('--eval_top_candidate', type = bool, default = True)
@@ -71,21 +71,13 @@ idx = dataset_names.index(args.dataset)
 
 args.highlights = highlights[idx]
 if args.val_dataset == "small_val":
-    args.val_data_size = 300
+    args.val_dataset_size = 300
 elif args.val_dataset == "val":
-    args.val_data_size = val_data_sizes[idx]
+    args.val_dataset_size = val_data_sizes[idx]
 elif args.val_dataset == "test":
-    args.val_data_size = test_data_sizes[idx]
+    args.val_dataset_size = test_data_sizes[idx]
 args.test_data_size = test_data_sizes[idx]
-args.max_length = max_lengths[idx]
-args.max_summary_length = max_summary_lengths[idx]
 args.clean_n = clean_ns[idx]
-if args.model_type == "pegasus":
-    args.length_penalty = length_penalties_pegasus[idx]
-elif args.model_type == "bart":
-    args.length_penalty = length_penalties_bart[idx]
-args.repetition_penalty = repetition_penalties[idx]
-args.no_repeat_ngram_size = no_repeat_ngram_sizes[idx]
 
 print("*"*50)
 print(args)
@@ -104,13 +96,13 @@ def main(args):
     print("Using device: {}".format(device))
 
     # load summaries
-    summaries_path = args.summaries_path + "{}/{}_summaries_{}_{}_beams_{}.pkl".format(args.set, args.set, args.model_name, args.dataset_size, args.num_candidates)
+    summaries_path = args.summaries_path + "{}/{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
     with open(summaries_path, "rb") as f:
         summaries = pickle.load(f)
     print("Loaded {} summaries".format(len(summaries)))
 
     # load labels
-    labels_path = args.summaries_path + "{}/{}_labels_{}_beams_{}.pkl".format(args.set, args.set, args.dataset_size, args.num_candidates)
+    labels_path = args.summaries_path + "{}/{}_labels_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.val_dataset_size, args.num_candidates)
     with open(labels_path, "rb") as f:
         labels = pickle.load(f)
     print("Loaded {} labels".format(len(labels)))
@@ -123,7 +115,7 @@ def main(args):
 
     # init
     if "rouge" in args.label_metric:
-        scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeLsum'], use_stemmer = True)
+        scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeLsum'], use_stemmer = args.stemmer)
         scores = []
     elif args.label_metric == "bertscore":
         all_summaries = []
