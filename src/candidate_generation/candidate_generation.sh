@@ -1,4 +1,4 @@
-python -m main_candidate_generation.py \
+python main_candidate_generation.py \
 --cuda True \
 --dataset reddit \
 --model_type pegasus \
