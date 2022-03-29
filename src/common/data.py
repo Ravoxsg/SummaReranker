@@ -40,12 +40,10 @@ def prepare_data_files(set, args):
     # find the files
     text_files = []
     summary_files = []
-    for lang in args.languages:
-        lang_path = args.data_folder + "{}/".format(lang)
-        text_file = lang_path + "{}_text.txt".format(set)
-        summary_file = lang_path + "{}_summary.txt".format(set)
-        text_files.append(text_file)
-        summary_files.append(summary_file)
+    text_file = args.data_folder + "en/{}_text.txt".format(set)
+    summary_file = args.data_folder  + "en/{}_summary.txt".format(set)
+    text_files.append(text_file)
+    summary_files.append(summary_file)
 
     print("For set {}, loading the following files:".format(set))
     print(text_files)

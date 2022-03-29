@@ -4,9 +4,7 @@ import gc
 
 from tqdm import tqdm
 
-from common.language_mapping import *
 from transformers import BeamSearchScorer, LogitsProcessorList, MinLengthLogitsProcessor, HammingDiversityLogitsProcessor
-
 
 
 

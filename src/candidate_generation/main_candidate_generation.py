@@ -23,12 +23,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type = int, default = 42)
 parser.add_argument('--cuda', type = bool, default = True)
 parser.add_argument('--debug', type = bool, default = False)
-parser.add_argument('--debug_size', type = int, default = 10)
+parser.add_argument('--debug_size', type = int, default = 30)
 
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", 
                     choices= ["cnndm", "xsum", "reddit"]) 
-parser.add_argument('--data_folder', type = str, default = "../../DATASETS/RedditTIFU/data/") 
+parser.add_argument('--data_folder', type = str, default = "/data/mathieu/DATASETS/RedditTIFU/data/") 
 
 # model
 parser.add_argument('--model_type', type = str, default = "pegasus") # in ["t5", "pegasus", "bart"]
@@ -39,9 +39,9 @@ parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1"
                     choices = ["pegasus_cnndm", "bart_cnndm", "pegasus_xsum", "bart_xsum", 
                     "pegasus_reddit_train_1", "bart_reddit"])
 parser.add_argument('--hidden_size', type = int, default = 768) # 768 / 1024`
-parser.add_argument('--cache_dir', type = str, default = "../../hf_models/pegasus-large/") 
+parser.add_argument('--cache_dir', type = str, default = "../../hf_models/pegasus-large-reddit/") 
 parser.add_argument('--load_model', type = bool, default = True)
-parser.add_argument('--load_model_path', type = str, default = "../1_base_finetuning/ft_saved_models/pegasus_reddit_train_1/checkpoint-1250/pytorch_model.bin")
+parser.add_argument('--load_model_path', type = str, default = "/data/mathieu/2nd_stage_summarization/1_base_finetuning/ft_saved_models/pegasus_reddit_train_1/checkpoint-1250/pytorch_model.bin")
 parser.add_argument('--ft_model', type = bool, default = True)
 
 # summary generation
@@ -122,8 +122,7 @@ def main(args):
     val_data = load_data(args.val_dataset, args, individual_txt = args.highlights)
 
     # tokenizer
-    #tokenizer = build_tokenizer(args)
-    tokenizer = AutoTokenizer.from_pretrained(args.model, cache_dir = args.cache_dir)
+    tokenizer = build_tokenizer(args)
 
     # datasets
     datasets = []
@@ -145,13 +144,8 @@ def main(args):
     # data loader
     val_loader = torch.utils.data.DataLoader(val_dataset, batch_size = args.inference_bs, shuffle = False)
 
-    # check data pipe
-    if args.check_data_pipe:
-        check_data_pipe([val_loader])
-
     # model
-    #model = build_model(args)
-    model = AutoModel.from_pretrained(args.model, cache_dir = args.cache_dir)
+    model = build_model(args)
     if args.ft_model:
         model = FTModel(model, args)
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
