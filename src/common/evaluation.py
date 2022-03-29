@@ -16,7 +16,7 @@ def overall_eval(val_texts, val_summaries, val_labels, args):
     all_score_names = []
     all_scores = []
     if args.eval_rouge:
-        r1, r2, rl = rouge_eval("true labels", val_texts, val_summaries, val_labels, args, show_summaries = True)
+        r1, r2, rl = rouge_eval("true labels", val_texts, val_summaries, val_labels, args)
         all_scores.append(r1)
         all_scores.append(r2)
         all_scores.append(rl)
@@ -46,27 +46,13 @@ def overall_eval(val_texts, val_summaries, val_labels, args):
     return all_scores, all_score_names
 
 
-def rouge_eval(mode, val_texts, val_summaries, val_labels, args, show_summaries = False):
+def rouge_eval(mode, val_texts, val_summaries, val_labels, args):
     print("\n", "*"*10, "1 - ROUGE evaluation with {}".format(mode), "*"*10)
     scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeLsum'], use_stemmer = args.stemmer)
     all_r1s = []
     all_r2s = []
     all_rls = []
     for i in range(len(val_summaries)):
-        if show_summaries and i < args.n_show_summaries:
-            print("*" * 50)
-            print("\nData point: {} / {}".format(i+1, len(val_summaries)))
-            print("\nText:")
-            print(val_texts[i].replace("\n", " "))
-            print("\nLEAD-3:")
-            sents = sent_tokenize(val_texts[i])
-            lead_3 = " ".join(sents[:3])
-            print(lead_3.replace("\n", " "))
-            print("\nPredicted summary:")
-            print(val_summaries[i].replace("\n", " "))
-            print("\nGround-truth summary:")
-            print(val_labels[i])
-
         summary = val_summaries[i]
         summary = pre_rouge_processing(summary, args)
         label = val_labels[i]

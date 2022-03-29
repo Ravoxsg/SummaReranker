@@ -66,7 +66,6 @@ parser.add_argument('--inference_bs', type=int, default = 60)
 
 # generation
 parser.add_argument('--stemmer', type = bool, default = True)
-parser.add_argument('--n_show_summaries', type = int, default = 0)
 
 # metrics
 parser.add_argument('--eval_rouge', type = bool, default = True)
