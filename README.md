@@ -32,6 +32,8 @@ CUDA_VISIBLE_DEVICES=0 bash candidate_generation.sh
 ```
 Generating summary candidates should take a few hours on the test set of CNN/DM, XSum or Reddit.
 
+Note that for Reddit, you need to fine-tune the model on your training split prior to generating candidates.
+
 ### 2 - Score the candidates
 To evaluate SummaReranker, we need to score each summary candidate with all the metrics of interest (ROUGE, BERTScore, BARTScore, etc).  
 For instance to score PEGASUS diverse beam search candidates on Reddit validation set with ROUGE-L:
