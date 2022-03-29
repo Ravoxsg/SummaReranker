@@ -19,3 +19,24 @@ conda create --name summa_reranker python=3.8.8
 conda activate summa_reranker
 pip install -r requirements.txt
 ```
+
+## Generate the re-ranking dataset
+
+### 1 - Generate summary candidates
+SummaReranker takes as input a set of summary candidates from a given sequence-to-sequence model (PEGASUS, BART) and a given decoding method
+(beam search, diverse beam search, top-p sampling, top-k sampling).  
+For instance with PEGASUS on Reddit validation set, and with diverse beam search:
+```
+cd src/candidate_generation/
+CUDA_VISIBLE_DEVICES=0 bash candidate_generation.sh
+```
+Generating summary candidates should take a few hours on the test set of CNN/DM, XSum or Reddit.
+
+### 2 - Score the candidates
+To evaluate SummaReranker, we need to score each summary candidate with all the metrics of interest (ROUGE, BERTScore, BARTScore, etc).  
+For instance to score PEGASUS diverse beam search candidates on Reddit validation set with ROUGE-L:
+```
+CUDA_VISIBLE_DEVICES=0 bash scores.sh
+```
+Scoring all candidates should take a few minutes with ROUGE metrics on the test set of CNN/DM, XSum or Reddit. 
+
