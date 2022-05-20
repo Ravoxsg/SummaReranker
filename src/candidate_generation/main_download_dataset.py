@@ -26,6 +26,7 @@ args = parser.parse_args()
 
 dataset_keys = ["cnndm", "xsum", "reddit"]
 dataset_names = ["cnn_dailymail", "xsum", "reddit_tifu"]
+highlights = [True, False, False]
 make_splits = [False, False, True]
 data_versions = ["3.0.0", "", "long"]
 text_keys = ["article", "document", "documents"]
@@ -33,6 +34,7 @@ summary_keys = ["highlights", "summary", "tldr"]
 
 idx = dataset_keys.index(args.dataset)
 args.dataset_name = dataset_names[idx]
+args.highlights = highlights[idx]
 args.make_split = make_splits[idx]
 args.data_version = data_versions[idx]
 args.text_key = text_keys[idx]
@@ -109,10 +111,11 @@ def main(args):
                 write_to_txt(text, path)
 
                 # individual files (to use for CNN/DM)
-                text = [x[content] for x in dataset_set]
-                print(set, len(text))
-                folder_path = args.data_folder + set_name + "/" + content_name + "/"
-                write_to_individual_txt(text, folder_path, set_name, content_name)
+                if args.highlights:
+                    text = [x[content] for x in dataset_set]
+                    print(set, len(text))
+                    folder_path = args.data_folder + set_name + "/" + content_name + "/"
+                    write_to_individual_txt(text, folder_path, set_name, content_name)
 
 
 def seed_everything(seed=42):
