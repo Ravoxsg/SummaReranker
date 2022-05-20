@@ -20,7 +20,7 @@ parser.add_argument('--seed', type = int, default = 42)
 
 # data
 parser.add_argument('--dataset', type=str, default = "cnndm", choices= ["cnndm", "xsum", "reddit"])
-parser.add_argument('--data_folder', type = str, default = "/data/mathieu/DATASETS/RedditTIFU/data/en2") # todo: change to where you want to save the data
+parser.add_argument('--data_folder', type = str, default = "/data/mathieu/DATASETS/CNNDM/data/en2") # todo: change to where you want to save the data
 
 args = parser.parse_args()
 
@@ -114,7 +114,11 @@ def main(args):
                 if args.highlights:
                     text = [x[content] for x in dataset_set]
                     print(set, len(text))
-                    folder_path = args.data_folder + set_name + "/" + content_name + "/"
+                    folder_path = args.data_folder + "/" + set_name + "/" + content_name + "/"
+                    try:
+                        os.makedirs(folder_path)
+                    except FileExistsError:
+                        pass
                     write_to_individual_txt(text, folder_path, set_name, content_name)
 
 
