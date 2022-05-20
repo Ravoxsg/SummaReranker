@@ -5,7 +5,7 @@ import pickle
 import sys
 import gc
 
-sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/")
+sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/") # todo: change to your folder path
 
 from time import time 
 from nltk.tokenize import sent_tokenize
@@ -28,9 +28,10 @@ parser.add_argument('--cuda', type = bool, default = True)
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", 
                     choices= ["cnndm", "xsum", "reddit"]) 
-parser.add_argument('--summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/") 
-parser.add_argument('--val_dataset', type = str, default = "small_val",
-                    choices = ["small_val", "val", "test"]) 
+parser.add_argument('--summaries_path', type = str,
+                    default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/") # todo: change to where you saved the summaries
+parser.add_argument('--val_dataset', type = str, default = "val",
+                    choices = ["val", "test"])
 
 # model
 parser.add_argument('--model_name', type = str, default = "pegasus_reddit_train_1",
@@ -47,7 +48,8 @@ parser.add_argument('--stemmer', type = bool, default = True)
 
 # export
 parser.add_argument('--save_scores', type = bool, default = False)
-parser.add_argument('--scored_summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/reranking_data/Reddit/2_diverse_beam_search/1c_rouge_l/")
+parser.add_argument('--scored_summaries_path', type = str,
+                    default = "/data/mathieu/2nd_stage_summarization/reranking_data/Reddit/2_diverse_beam_search/1c_rouge_l/") # todo: change to where you want to save the SCORED summaries
 
 # metrics
 parser.add_argument('--eval_top_candidate', type = bool, default = True)
@@ -69,9 +71,7 @@ clean_ns = [True, False, False]
 idx = dataset_names.index(args.dataset)
 
 args.highlights = highlights[idx]
-if args.val_dataset == "small_val":
-    args.val_dataset_size = 300
-elif args.val_dataset == "val":
+if args.val_dataset == "val":
     args.val_dataset_size = val_data_sizes[idx]
 elif args.val_dataset == "test":
     args.val_dataset_size = test_data_sizes[idx]
