@@ -1,8 +1,14 @@
 # Generate summary candidates with the fine-tuned models.
 
 import time
+import os
+import numpy as np
+import random
 import argparse
 import sys
+import datasets
+
+from tqdm import tqdm
 
 sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/") # todo: change to your folder path
 
@@ -13,19 +19,19 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type = int, default = 42)
 
 # data
-parser.add_argument('--dataset', type=str, default = "reddit", choices= ["cnndm", "xsum", "reddit"])
-parser.add_argument('--data_folder', type = str, default = "/data/mathieu/DATASETS/RedditTIFU/data/en2/") # todo: change to where you want to save the data
+parser.add_argument('--dataset', type=str, default = "cnndm", choices= ["cnndm", "xsum", "reddit"])
+parser.add_argument('--data_folder', type = str, default = "/data/mathieu/DATASETS/RedditTIFU/data/en2") # todo: change to where you want to save the data
 
 args = parser.parse_args()
 
-datasets_names = ["cnndm", "xsum", "reddit"]
+dataset_keys = ["cnndm", "xsum", "reddit"]
 dataset_names = ["cnn_dailymail", "xsum", "reddit_tifu"]
 make_splits = [False, False, True]
 data_versions = ["3.0.0", "", "long"]
 text_keys = ["article", "document", "documents"]
 summary_keys = ["highlights", "summary", "tldr"]
 
-idx = datasets.index(args.dataset)
+idx = dataset_keys.index(args.dataset)
 args.dataset_name = dataset_names[idx]
 args.make_split = make_splits[idx]
 args.data_version = data_versions[idx]
@@ -43,10 +49,10 @@ contents = [(args.text_key, "text"), (args.summary_key, "summary")]
 def main(args):
     seed_everything(42)
 
-    data_path = "data/en/"
     if args.dataset in ["xsum"]:
         dataset = datasets.load_dataset(args.dataset_name)
     else:
+        print(args.dataset_name, args.data_version)
         dataset = datasets.load_dataset(args.dataset_name, args.data_version)
 
     if args.make_split:
@@ -96,18 +102,17 @@ def main(args):
                 print(set, set_name, content, content_name)
                 dataset_set = dataset[set]
 
+                # single file with 1 data point per line
                 text = [x[content].replace("\n", " ") for x in dataset_set]
                 print(set, len(text))
-
-                path = data_path + "/{}_{}.txt".format(set_name, content_name)
+                path = args.data_folder + "/{}_{}.txt".format(set_name, content_name)
                 write_to_txt(text, path)
 
-                if set != "train":
-                    text = [x[content] for x in dataset_set]
-                    print(set, len(text))
-
-                    folder_path = data_path + set_name + "/" + content_name + "/"
-                    write_to_individual_txt(text, folder_path, set_name, content_name)
+                # individual files (to use for CNN/DM)
+                text = [x[content] for x in dataset_set]
+                print(set, len(text))
+                folder_path = args.data_folder + set_name + "/" + content_name + "/"
+                write_to_individual_txt(text, folder_path, set_name, content_name)
 
 
 def seed_everything(seed=42):
