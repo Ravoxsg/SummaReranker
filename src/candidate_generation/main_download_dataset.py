@@ -126,6 +126,13 @@ def write_to_txt(l, path):
             f.write(text + "\n")
 
 
+def write_to_individual_txt(l, path, set, content_name):
+    for i in tqdm(range(len(l))):
+        path_i = path + "{}_{}_{}.txt".format(set, content_name, i)
+        with open(path_i, "w") as f:
+            f.write(l[i])
+            
+
 if __name__ == '__main__':
 
     main(args)
