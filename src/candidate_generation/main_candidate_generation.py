@@ -4,7 +4,7 @@ import time
 import argparse
 import sys
 
-sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/")
+sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/") # todo: change to your folder path
 
 from common.utils import *
 from common.evaluation import *
@@ -26,7 +26,7 @@ parser.add_argument('--debug_size', type = int, default = 30)
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", 
                     choices= ["cnndm", "xsum", "reddit"]) 
-parser.add_argument('--data_folder', type = str, default = "/data/mathieu/DATASETS/RedditTIFU/data/") 
+parser.add_argument('--data_folder', type = str, default = "/data/mathieu/DATASETS/RedditTIFU/data/en/") # todo: change to where you saved the data
 
 # model
 parser.add_argument('--model_type', type = str, default = "pegasus") # in ["t5", "pegasus", "bart"]
@@ -39,7 +39,7 @@ parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1"
 parser.add_argument('--hidden_size', type = int, default = 768) # 768 / 1024`
 parser.add_argument('--cache_dir', type = str, default = "/data/mathieu/hf_models/pegasus-large-reddit/") 
 parser.add_argument('--load_model', type = bool, default = True)
-parser.add_argument('--load_model_path', type = str, default = "/data/mathieu/2nd_stage_summarization/1_base_finetuning/ft_saved_models/pegasus_reddit_train_1/checkpoint-1250/pytorch_model.bin")
+parser.add_argument('--load_model_path', type = str, default = "/data/mathieu/2nd_stage_summarization/1_base_finetuning/ft_saved_models/pegasus_reddit_train_1/checkpoint-1250/pytorch_model.bin") # todo: change to where you saved the finetuned checkpoint
 parser.add_argument('--ft_model', type = bool, default = True)
 
 # summary generation
@@ -47,7 +47,7 @@ parser.add_argument('--val_dataset', type=str, default = "small_val",
                     choices = ["small_val", "val", "test"]) 
 parser.add_argument('--inference_bs', type = int, default = 2) 
 parser.add_argument('--save_summaries', type = bool, default = False)
-parser.add_argument('--save_summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/")
+parser.add_argument('--save_summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/") # todo: change to where you want to save the summaries
 parser.add_argument('--generation_method', type = str, default = "diverse_beam_search",
                     choices = ["beam_search", "diverse_beam_search", "top_p_sampling", "top_k_sampling"])
 parser.add_argument('--num_return_sequences', type = int, default = 15) # default: 15

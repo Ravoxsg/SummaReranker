@@ -19,20 +19,19 @@ def load_data(set, args, individual_txt=False):
 def read_data_files_individual(set, args):
     texts = []
     summaries = []
-    for lang in ["en"]:
-        lang_path = args.data_folder + "{}/".format(lang)
-        lang_set_text_path = lang_path + set + "/" + "text/"
-        lang_set_summary_path = lang_path + set + "/" + "summary/"
-        n_docs = len(os.listdir(lang_set_text_path))
-        print("For lang {}, there are {} {} documents".format(lang, n_docs, set))
-        for i in tqdm(range(n_docs)):
-            text_path_i = lang_set_text_path + "{}_text_{}.txt".format(set, i)
-            text_i = "".join(open(text_path_i, "r").readlines())
-            texts.append(text_i)
-        for i in tqdm(range(n_docs)):
-            summary_path_i = lang_set_summary_path + "{}_summary_{}.txt".format(set, i)
-            summary_i = "".join(open(summary_path_i, "r").readlines())
-            summaries.append(summary_i)
+    set_text_path = args.data_folder + set + "/" + "text/"
+    set_summary_path = args.data_folder + set + "/" + "summary/"
+    n_docs = len(os.listdir(set_text_path))
+    print("There are {} {} documents".format(n_docs, set))
+    for i in tqdm(range(n_docs)):
+        text_path_i = set_text_path + "{}_text_{}.txt".format(set, i)
+        text_i = "".join(open(text_path_i, "r").readlines())
+        texts.append(text_i)
+    for i in tqdm(range(n_docs)):
+        summary_path_i = set_summary_path + "{}_summary_{}.txt".format(set, i)
+        summary_i = "".join(open(summary_path_i, "r").readlines())
+        summaries.append(summary_i)
+
     return texts, summaries
 
 
@@ -40,8 +39,8 @@ def prepare_data_files(set, args):
     # find the files
     text_files = []
     summary_files = []
-    text_file = args.data_folder + "en/{}_text.txt".format(set)
-    summary_file = args.data_folder  + "en/{}_summary.txt".format(set)
+    text_file = args.data_folder + "{}_text.txt".format(set)
+    summary_file = args.data_folder  + "{}_summary.txt".format(set)
     text_files.append(text_file)
     summary_files.append(summary_file)
 
