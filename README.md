@@ -22,19 +22,30 @@ pip install -r requirements.txt
 
 ## Generate the re-ranking dataset
 
-### 1 - Generate summary candidates
+### 1 - Download the dataset
+We use HuggingFace datasets library to access and save each dataset.
+We save it as .txt file for the sources, and another one for the summaries, with 1 data point per line.
+For CNN/DM, we save one .txt file for every single data point 
+For instance to download and save Reddit:
+```
+cd src/candidate_generation/
+bash dataset.sh
+```
+
+Note that for Reddit, we make a custom 80/10/10 train/val/test split.
+
+### 2 - Generate summary candidates
 SummaReranker takes as input a set of summary candidates from a given sequence-to-sequence model (PEGASUS, BART) and a given decoding method
 (beam search, diverse beam search, top-p sampling, top-k sampling).  
 For instance with PEGASUS on Reddit validation set, and with diverse beam search:
 ```
-cd src/candidate_generation/
 CUDA_VISIBLE_DEVICES=0 bash candidate_generation.sh
 ```
 Generating summary candidates should take a few hours on the test set of CNN/DM, XSum or Reddit.
 
 Note that for Reddit, you need to fine-tune the model on your training split prior to generating candidates.
 
-### 2 - Score the candidates
+### 3 - Score the candidates
 To evaluate SummaReranker, we need to score each summary candidate with all the metrics of interest (ROUGE, BERTScore, BARTScore, etc).  
 For instance to score PEGASUS diverse beam search candidates on Reddit validation set with ROUGE-L:
 ```
