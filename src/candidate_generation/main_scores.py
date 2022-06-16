@@ -61,7 +61,7 @@ args = parser.parse_args()
 
 dataset_names = ["cnndm", "xsum", "reddit"]
 highlights = [True, False, False]
-val_data_sizes = [13368, 11332, 10]
+val_data_sizes = [13368, 11332, 4213]
 test_data_sizes = [11490, 11334, 4222]
 clean_ns = [True, False, False]
 
@@ -92,16 +92,18 @@ def main(args):
         os.makedirs("../../scored_summaries/{}/{}/".format(args.dataset, args.val_dataset))
     if not(os.path.isdir("../../scored_summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method))):
         os.makedirs("../../scored_summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method))
+    if not(os.path.isdir("../../scored_summaries/{}/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method, args.label_metric))):
+        os.makedirs("../../scored_summaries/{}/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method, args.label_metric))
 
     # path
     path = "../../summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method)
     # load summaries
-    summaries_path = path + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
+    summaries_path = path + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
     with open(summaries_path, "rb") as f:
         summaries = pickle.load(f)
     print("Loaded {} summaries".format(len(summaries)))
     # load labels
-    labels_path = path + "{}_labels_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.val_dataset_size, args.num_candidates)
+    labels_path = path + "{}_labels_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset_size, args.num_candidates)
     with open(labels_path, "rb") as f:
         labels = pickle.load(f)
     print("Loaded {} labels".format(len(labels)))
@@ -181,7 +183,7 @@ def main(args):
 
     if args.save_scores:
         new_path = "../../scored_summaries/{}/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method, args.label_metric)
-        save_path = new_path + "{}_scored_summaries_{}_{}_beams_{}.pkl".format(args.set, args.model_name, args.dataset_size, args.num_candidates)
+        save_path = new_path + "{}_scored_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
         with open(save_path, "wb") as f:
             pickle.dump(scored_summaries, f)
             print("saved new data!", save_path)
