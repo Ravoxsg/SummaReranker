@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type = int, default = 42)
 parser.add_argument('--cuda', type = bool, default = True)
 parser.add_argument('--debug', type = bool, default = False)
-parser.add_argument('--debug_size', type = int, default = 30)
+parser.add_argument('--debug_size', type = int, default = 10)
 
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", 
@@ -110,7 +110,9 @@ def main(args):
     if not(os.path.isdir("../../summaries/{}/".format(args.dataset))):
         os.makedirs("../../summaries/{}/".format(args.dataset))
     if not(os.path.isdir("../../summaries/{}/{}/".format(args.dataset, args.val_dataset))):
-        os.makedirs("../../summaries/{}/{}/".format(args.dataset, args.val_datase))
+        os.makedirs("../../summaries/{}/{}/".format(args.dataset, args.val_dataset))
+    if not(os.path.isdir("../../summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method))):
+        os.makedirs("../../summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method))
 
     # device
     device = torch.device("cpu")
@@ -164,14 +166,14 @@ def main(args):
     # export
     num_candidates = len(val_summaries[0])
     if args.save_summaries:
-        with open("../../summaries/{}/{}/".format(args.dataset, args.val_dataset) + "{}_texts_{}_beams_{}.pkl".format(args.val_dataset, len(val_texts), num_candidates), "wb") as f:
+        path = "../../summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method)
+        with open(path + "{}_texts_{}_beams_{}.pkl".format(args.val_dataset, len(val_texts), num_candidates), "wb") as f:
             pickle.dump(val_texts, f)
-        with open("../../summaries/{}/{}/".format(args.dataset, args.val_dataset) + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, len(val_texts), num_candidates), "wb") as f:
+        with open(path + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, len(val_texts), num_candidates), "wb") as f:
             pickle.dump(val_summaries, f)
-        with open("../../summaries/{}/{}/".format(args.dataset, args.val_dataset) + "{}_labels_{}_beams_{}.pkl".format(args.val_dataset, len(val_texts), num_candidates), "wb") as f:
+        with open(path + "{}_labels_{}_beams_{}.pkl".format(args.val_dataset, len(val_texts), num_candidates), "wb") as f:
             pickle.dump(val_labels, f)
-        print("saved generated summaries!", "../../summaries/{}/{}/".format(args.dataset, args.val_dataset))
-
+        print("saved generated summaries!", path)
 
 
 if __name__ == '__main__':

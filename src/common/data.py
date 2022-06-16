@@ -19,8 +19,8 @@ def load_data(set, args, individual_txt=False):
 def read_data_files_individual(set, args):
     texts = []
     summaries = []
-    set_text_path = args.data_folder + set + "/" + "text/"
-    set_summary_path = args.data_folder + set + "/" + "summary/"
+    set_text_path = "../../data/{}/".format(args.dataset) + set + "/" + "text/"
+    set_summary_path = "../../data/{}".format(args.dataset) + set + "/" + "summary/"
     n_docs = len(os.listdir(set_text_path))
     print("There are {} {} documents".format(n_docs, set))
     for i in tqdm(range(n_docs)):
@@ -39,8 +39,8 @@ def prepare_data_files(set, args):
     # find the files
     text_files = []
     summary_files = []
-    text_file = args.data_folder + "{}_text.txt".format(set)
-    summary_file = args.data_folder  + "{}_summary.txt".format(set)
+    text_file =  "../../data/{}/{}_text.txt".format(args.dataset, set)
+    summary_file = "../../data/{}/{}_summary.txt".format(args.dataset, set)
     text_files.append(text_file)
     summary_files.append(summary_file)
 

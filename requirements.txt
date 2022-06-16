@@ -1,4 +1,5 @@
 accelerate==0.4.0
+bert-score==0.3.11
 datasets==2.3.2
 fairscale==0.4.0
 huggingface-hub==0.7.0
