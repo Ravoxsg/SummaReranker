@@ -2,7 +2,7 @@ python evaluate.py \
 --dataset reddit \
 --val_dataset val \
 --generation_methods_str diverse_beam_search \
---scoring_methods_str rouge_1 \
+--scoring_methods_str rouge_1+rouge_2+rouge_l \
 --model_name pegasus_reddit_train_1 \
 --num_beams 15 \
 --model roberta-large \

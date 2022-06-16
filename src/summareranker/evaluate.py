@@ -29,8 +29,8 @@ parser.add_argument('--dataset', type=str, default = "reddit",
                     choices= ["cnndm", "xsum", "reddit"])
 parser.add_argument('--val_dataset', type=str, default = "small_val",
                     choices = ["small_val", "val", "test"])
-parser.add_argument('--generation_methods_str', type=str, default = "1_beam_search")
-parser.add_argument('--scoring_methods_str', type=str, default = "1a_rouge_1+1b_rouge_2+1c_rouge_l") 
+parser.add_argument('--generation_methods_str', type=str, default = "diverse_beam_search")
+parser.add_argument('--scoring_methods_str', type=str, default = "rouge_1+rouge_2+rouge_l")
 parser.add_argument('--sep_symbol', type=str, default = "[SEP]")
 parser.add_argument('--val_size', type=int, default = 300) 
 
@@ -55,6 +55,7 @@ parser.add_argument('--expert_hidden_size', type = int, default = 1024)
 parser.add_argument('--tower_hidden_size', type = int, default = 1024)
 parser.add_argument('--load_model', type=bool, default = True)
 parser.add_argument('--load_model_path', type=str, default = "/data/mathieu/2nd_stage_summarization/4_supervised_multitask_reranking/saved_models/reddit/multitask_3_tasks_ablation_5/checkpoint-1000/pytorch_model.bin")
+# todo: change the path to where you saved the SummaReranker checkpoint!
 
 # optimization
 parser.add_argument('--inference_bs', type=int, default = 60)
@@ -77,7 +78,7 @@ args.n_tasks = len(args.scoring_methods)
 
 dataset_names = ["cnndm", "xsum", "reddit"]
 highlights = [True, False, False]
-val_data_sizes = [13368, 11332, 10]
+val_data_sizes = [13368, 11332, 4213]
 test_data_sizes = [11490, 11334, 4222]
 max_lengths = [384, 448, 384]
 max_summary_lengths = [128, 64, 128]
