@@ -84,10 +84,17 @@ def main(args):
     # seed
     seed_everything(args.seed)
 
+    if not(os.path.isdir("../../scored_summaries/")):
+        os.makedirs("../../scored_summaries/")
+    if not(os.path.isdir("../../scored_summaries/{}/".format(args.dataset))):
+        os.makedirs("../../scored_summaries/{}/".format(args.dataset))
+    if not(os.path.isdir("../../scored_summaries/{}/{}/".format(args.dataset, args.val_dataset))):
+        os.makedirs("../../scored_summaries/{}/{}/".format(args.dataset, args.val_dataset))
+    if not(os.path.isdir("../../scored_summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method))):
+        os.makedirs("../../scored_summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method))
+
     # path
     path = "../../summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method)
-    if not(os.path.isdir(path + "{}/".format(args.label_metric))):
-        os.makedirs(path + "{}/".format(args.label_metric))
     # load summaries
     summaries_path = path + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
     with open(summaries_path, "rb") as f:
@@ -173,7 +180,8 @@ def main(args):
     print("ORACLE score: {:.4f}".format(np.mean(np.array(oracle_scores))))
 
     if args.save_scores:
-        save_path = path + "{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(args.label_metric, args.set, args.model_name, args.dataset_size, args.num_candidates)
+        new_path = "../../scored_summaries/{}/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method, args.label_metric)
+        save_path = new_path + "{}_scored_summaries_{}_{}_beams_{}.pkl".format(args.set, args.model_name, args.dataset_size, args.num_candidates)
         with open(save_path, "wb") as f:
             pickle.dump(scored_summaries, f)
             print("saved new data!", save_path)
