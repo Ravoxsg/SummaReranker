@@ -23,24 +23,23 @@ from common.evaluation import overall_eval
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--seed', type = int, default = 42)
-parser.add_argument('--cuda', type = bool, default = True)
 
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", 
-                    choices= ["cnndm", "xsum", "reddit"]) 
-parser.add_argument('--summaries_path', type = str,
-                    default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/") # todo: change to where you saved the summaries
+                    choices= ["cnndm", "xsum", "reddit"])
 parser.add_argument('--val_dataset', type = str, default = "val",
                     choices = ["val", "test"])
+parser.add_argument('--generation_method', type = str, default = "diverse_beam_search",
+                    choices = ["beam_search", "diverse_beam_search", "top_p_sampling", "top_k_sampling"])
 
 # model
-parser.add_argument('--model_name', type = str, default = "pegasus_reddit_train_1",
-                    choices = ["pegasus_cnndm", "bart_cnndm", "pegasus_xsum", "bart_xsum", 
-                    "pegasus_reddit_train_1", "bart_reddit"]) 
+parser.add_argument('--model_name', type = str, default = "pegasus_unsupervised",
+                    choices = ["pegasus_unsupervised", "pegasus_cnndm", "bart_cnndm",
+                    "pegasus_xsum", "bart_xsum", "pegasus_reddit_train_1", "bart_reddit"])
 parser.add_argument('--num_candidates', type = int, default = 15)
 
 # METRIC
-parser.add_argument('--label_metric', type = str, default = "rouge_l",
+parser.add_argument('--label_metric', type = str, default = "rouge_1",
                     choices = ["mean_rouge", "rouge_1", "rouge_2", "rouge_l", "bertscore", "bartscore"])
 
 # evaluation
@@ -48,8 +47,6 @@ parser.add_argument('--stemmer', type = bool, default = True)
 
 # export
 parser.add_argument('--save_scores', type = bool, default = False)
-parser.add_argument('--scored_summaries_path', type = str,
-                    default = "/data/mathieu/2nd_stage_summarization/reranking_data/Reddit/2_diverse_beam_search/1c_rouge_l/") # todo: change to where you want to save the SCORED summaries
 
 # metrics
 parser.add_argument('--eval_top_candidate', type = bool, default = True)
@@ -87,21 +84,17 @@ def main(args):
     # seed
     seed_everything(args.seed)
 
-    # device
-    device = torch.device("cpu")
-    if args.cuda and torch.cuda.is_available():
-        device = torch.device("cuda")
-    args.device = device
-    print("Using device: {}".format(device))
-
+    # path
+    path = "../../summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method)
+    if not(os.path.isdir(path + "{}/".format(args.label_metric))):
+        os.makedirs(path + "{}/".format(args.label_metric))
     # load summaries
-    summaries_path = args.summaries_path + "{}/{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
+    summaries_path = path + "{}/{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
     with open(summaries_path, "rb") as f:
         summaries = pickle.load(f)
     print("Loaded {} summaries".format(len(summaries)))
-
     # load labels
-    labels_path = args.summaries_path + "{}/{}_labels_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.val_dataset_size, args.num_candidates)
+    labels_path = path + "{}/{}_labels_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.val_dataset_size, args.num_candidates)
     with open(labels_path, "rb") as f:
         labels = pickle.load(f)
     print("Loaded {} labels".format(len(labels)))
@@ -180,7 +173,7 @@ def main(args):
     print("ORACLE score: {:.4f}".format(np.mean(np.array(oracle_scores))))
 
     if args.save_scores:
-        save_path = args.scored_summaries_path + "{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(args.set, args.set, args.model_name, args.dataset_size, args.num_candidates)
+        save_path = path + "{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(args.label_metric, args.set, args.model_name, args.dataset_size, args.num_candidates)
         with open(save_path, "wb") as f:
             pickle.dump(scored_summaries, f)
             print("saved new data!", save_path)
