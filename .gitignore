@@ -1,5 +1,5 @@
 data/*
 summaries/*
-reranking_data/*
+scored_summaries/*
 src/common/__pycache__/*
 src/common/summareranker/__pycache__/*
