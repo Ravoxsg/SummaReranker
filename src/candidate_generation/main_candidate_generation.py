@@ -27,7 +27,7 @@ parser.add_argument('--debug_size', type = int, default = 30)
 parser.add_argument('--dataset', type=str, default = "reddit", 
                     choices= ["cnndm", "xsum", "reddit"]) 
 parser.add_argument('--data_folder', type = str,
-                    default = "/data/mathieu/DATASETS/RedditTIFU/data/en/") # todo: change to where you saved the data
+                    default = "/data/mathieu/temp/") # todo: change to where you saved the data
 
 # model
 parser.add_argument('--model_type', type = str, default = "pegasus") # in ["t5", "pegasus", "bart"]

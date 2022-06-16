@@ -19,8 +19,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type = int, default = 42)
 
 # data
-parser.add_argument('--dataset', type=str, default = "cnndm", choices= ["cnndm", "xsum", "reddit"])
-parser.add_argument('--data_folder', type = str, default = "/data/mathieu/DATASETS/CNNDM/data/en2") # todo: change to where you want to save the data
+parser.add_argument('--dataset', type=str, default = "reddit", choices= ["cnndm", "xsum", "reddit"])
+parser.add_argument('--data_folder', type = str, default = "/data/mathieu/temp/") # todo: change to where you want to save the data
 
 args = parser.parse_args()
 
