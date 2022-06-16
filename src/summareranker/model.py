@@ -162,10 +162,6 @@ class ModelMultitaskBinary(nn.Module):
 
                 # labels
                 labels_i_j = labels_i[j]
-                if self.args.pos_neg_construction == "overall_sum_mean":
-                    labels_i_j = torch.zeros(len(preds_i_j), device = self.pretrained_model.device)
-                    pos_idx = scores_i[j].argmax().item()
-                    labels_i_j[pos_idx] = 1
                 if torch.sum(mode) > 0:
                     self.original_training_labels[j].append(original_labels_i[j].sum().item())
                     self.training_labels[j].append(labels_i_j.sum().item())
@@ -230,42 +226,4 @@ class ModelMultitaskBinary(nn.Module):
         
         return outputs
 
-    def forward_ca(self, mode, text_ids, text_mask, text_and_summaries_ids, text_and_summaries_mask, scores):
-        loss = torch.tensor(0.0).to(self.pretrained_model.device)
-        accuracy = [0 for j in range(self.args.n_tasks)]
-        rank = [0 for j in range(self.args.n_tasks)]
-        predictions = [[] for j in range(self.args.n_tasks)]
-        total_predictions_idx = []
-        overall_sums = []
-        overall_predictions = []
-        all_attentions = []
-        for i in range(text_and_summaries_ids.shape[0]):
 
-            # data
-            text_and_summaries_ids_i = text_and_summaries_ids[i]
-            text_and_summaries_mask_i = text_and_summaries_mask[i]
-            scores_i = scores[i]
-            if torch.sum(mode) > 0 and self.args.filter_out_duplicates:
-                idx = unique_idx(scores[i])
-                text_and_summaries_ids_i = text_and_summaries_ids_i[idx]
-                text_and_summaries_mask_i = text_and_summaries_mask_i[idx]
-                scores_i = scores_i[:,idx]
-            if torch.sum(mode) > 0 and self.args.prune_candidates:
-                idx_to_keep = prune_idx(scores_i, self.args)
-                if self.args.pos_neg_construction == "per_task":
-                    idx_to_keep = idx_to_keep[:self.args.max_n_candidates]
-                text_and_summaries_ids_i = text_and_summaries_ids_i[idx_to_keep]
-                text_and_summaries_mask_i = text_and_summaries_mask_i[idx_to_keep]
-                scores_i = scores_i[:,idx_to_keep]
-            
-            # model output
-            # LM encoding
-            outputs_i = self.pretrained_model(
-                input_ids = text_and_summaries_ids_i, attention_mask = text_and_summaries_mask_i, output_hidden_states = True, output_attentions=True
-            )
-            attentions_i = outputs_i["attentions"]
-            attentions_i = attentions_i[-1]
-            all_attentions.append(attentions_i.unsqueeze(0))
-        all_attentions = torch.cat(all_attentions, 0)
-
-        return all_attentions

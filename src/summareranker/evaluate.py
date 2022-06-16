@@ -28,13 +28,10 @@ parser.add_argument('--cuda', type=bool, default = True)
 parser.add_argument('--dataset', type=str, default = "reddit", 
                     choices= ["cnndm", "xsum", "reddit"]) 
 parser.add_argument('--data_folder', type=str, default = "/data/mathieu/DATASETS/RedditTIFU/data/") # CNNDM / XSum / RedditTIFU
-parser.add_argument('--generation_methods', type = list, default = ["1_beam_search"],
-                    choices = ["1_beam_search", "2_diverse_beam_search", "3_top_p_sampling", "4_top_k_sampling"]
-)
-parser.add_argument('--scoring_methods', type=list, default = ["1a_rouge_1", "1b_rouge_2", "1c_rouge_l"]) 
+parser.add_argument('--generation_methods_str', type=str, default = "1_beam_search")
+parser.add_argument('--scoring_methods_str', type=str, default = "1a_rouge_1+1b_rouge_2+1c_rouge_l") 
 parser.add_argument('--scored_summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/reranking_data/Reddit/") 
 parser.add_argument('--sep_symbol', type=str, default = "[SEP]")
-parser.add_argument('--highlights', type = bool, default = False) 
 parser.add_argument('--val_dataset', type=str, default = "small_val",
                     choices = ["small_val", "val", "test"]) 
 parser.add_argument('--val_size', type=int, default = 300) 
@@ -46,7 +43,6 @@ parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1"
 parser.add_argument('--num_beams', type=int, default = 15)
 
 # model
-parser.add_argument('--pos_neg_construction', type = str, default = "overall_sum_mean") # in ["overall_sum_mean", "overall_sum", "per_task", "unique_task"]
 parser.add_argument('--sharp_pos', type=bool, default = False)
 parser.add_argument('--model', type=str, default = "roberta-large")  
 parser.add_argument('--cache_dir', type=str, default = "/data/mathieu/hf_models/roberta-large/")
@@ -67,7 +63,6 @@ parser.add_argument('--inference_bs', type=int, default = 60)
 
 # generation
 parser.add_argument('--stemmer', type = bool, default = True)
-parser.add_argument('--n_show_summaries', type = int, default = 0)
 
 # metrics
 parser.add_argument('--eval_rouge', type = bool, default = True)
@@ -78,6 +73,8 @@ parser.add_argument('--eval_rouge_text', type = bool, default = False)
 parser.add_argument('--check_correlation', type = bool, default = False)
 
 args = parser.parse_args()
+args.generation_methods = args.generation_methods_str.split("+")
+args.scoring_methods = args.scoring_methods_str.split("+")
 args.n_tasks = len(args.scoring_methods)
 
 dataset_names = ["cnndm", "xsum", "reddit"]

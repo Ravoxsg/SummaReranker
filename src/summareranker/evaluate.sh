@@ -1,0 +1,14 @@
+python evaluate.py \
+--cuda True \
+--dataset reddit \
+--data_folder /data/mathieu/DATASETS/RedditTIFU/data/ \
+--generation_methods_str 1_beam_search \
+--scoring_methods_str 1a_rouge_1+1b_rouge_2+1c_rouge_l \
+--val_dataset small_val \
+--model_name pegasus_reddit_train_1 \
+--num_beams 15 \
+--model roberta-large \
+--cache_dir /data/mathieu/hf_models/roberta-large \
+--load_model True \
+--load_model_path /data/mathieu/2nd_stage_summarization/4_supervised_multitask_reranking/saved_models/reddit/multitask_3_tasks_ablation_5/checkpoint-1000/pytorch_model.bin \
+--inference_bs 60 \
