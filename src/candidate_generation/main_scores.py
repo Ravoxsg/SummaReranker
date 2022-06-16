@@ -61,7 +61,7 @@ args = parser.parse_args()
 
 dataset_names = ["cnndm", "xsum", "reddit"]
 highlights = [True, False, False]
-val_data_sizes = [13368, 11332, 4213]
+val_data_sizes = [13368, 11332, 10]
 test_data_sizes = [11490, 11334, 4222]
 clean_ns = [True, False, False]
 

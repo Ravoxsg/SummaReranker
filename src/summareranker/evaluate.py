@@ -77,7 +77,7 @@ args.n_tasks = len(args.scoring_methods)
 
 dataset_names = ["cnndm", "xsum", "reddit"]
 highlights = [True, False, False]
-val_data_sizes = [13368, 11332, 4213]
+val_data_sizes = [13368, 11332, 10]
 test_data_sizes = [11490, 11334, 4222]
 max_lengths = [384, 448, 384]
 max_summary_lengths = [128, 64, 128]
@@ -122,6 +122,8 @@ def main(args):
     texts, summaries, scored_summaries = load_data(set, size, args, individual_txt = args.highlights)
     print("loaded new data!", len(texts), len(summaries), len(scored_summaries), len(scored_summaries[0]),
           len(scored_summaries[0][0]), len(scored_summaries[0][1]))
+    texts = texts[:len(scored_summaries)]
+    summaries = summaries[:len(summaries)]
     p = np.random.permutation(len(texts))
     p = p[:args.val_size]
     texts = [texts[i] for i in p]
