@@ -4,7 +4,7 @@ import time
 import argparse
 import sys
 
-sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/") # todo: change to your folder path
+sys.path.append("/data/mathieu/SummaReranker/src/") # todo: change to your folder path
 
 from common.utils import *
 from common.evaluation import *
@@ -25,22 +25,20 @@ parser.add_argument('--debug_size', type = int, default = 30)
 
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", 
-                    choices= ["cnndm", "xsum", "reddit"]) 
-parser.add_argument('--data_folder', type = str,
-                    default = "/data/mathieu/temp/") # todo: change to where you saved the data
+                    choices= ["cnndm", "xsum", "reddit"])
 
 # model
 parser.add_argument('--model_type', type = str, default = "pegasus") # in ["t5", "pegasus", "bart"]
 parser.add_argument('--model', type = str, default = "google/pegasus-large",
                     choices = ["google/pegasus-large", "google/pegasus-cnn_dailymail", "google/pegasus-xsum",
                     "facebook/bart-large", "facebook/bart-large-cnn", "facebook/bart-large-xsum"])
-parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1",
+parser.add_argument('--model_name', type=str, default = "pegasus_unsupervised",
                     choices = ["pegasus_cnndm", "bart_cnndm", "pegasus_xsum", "bart_xsum", 
                     "pegasus_reddit_train_1", "bart_reddit"])
 parser.add_argument('--hidden_size', type = int, default = 768) # 768 / 1024`
 parser.add_argument('--cache_dir', type = str,
-                    default = "/data/mathieu/hf_models/pegasus-large-reddit/")
-parser.add_argument('--load_model', type = bool, default = True)
+                    default = "/data/mathieu/hf_models/pegasus-large/")
+parser.add_argument('--load_model', type = bool, default = False)
 parser.add_argument('--load_model_path', type = str,
                     default = "/data/mathieu/2nd_stage_summarization/1_base_finetuning/ft_saved_models/pegasus_reddit_train_1/checkpoint-1250/pytorch_model.bin") # todo: change to where you saved the finetuned checkpoint
 parser.add_argument('--ft_model', type = bool, default = True)
@@ -50,8 +48,6 @@ parser.add_argument('--val_dataset', type=str, default = "val",
                     choices = ["val", "test"])
 parser.add_argument('--inference_bs', type = int, default = 2) 
 parser.add_argument('--save_summaries', type = bool, default = False)
-parser.add_argument('--save_summaries_path', type = str,
-                    default = "/data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/") # todo: change to where you want to save the summaries
 parser.add_argument('--generation_method', type = str, default = "diverse_beam_search",
                     choices = ["beam_search", "diverse_beam_search", "top_p_sampling", "top_k_sampling"])
 parser.add_argument('--num_return_sequences', type = int, default = 15) # default: 15
@@ -109,6 +105,13 @@ def main(args):
     # seed
     seed_everything(args.seed)
 
+    if not(os.path.isdir("../../summaries/")):
+        os.makedirs("../../summaries/")
+    if not(os.path.isdir("../../summaries/{}/".format(args.dataset))):
+        os.makedirs("../../summaries/{}/".format(args.dataset))
+    if not(os.path.isdir("../../summaries/{}/{}/".format(args.dataset, args.val_dataset))):
+        os.makedirs("../../summaries/{}/{}/".format(args.dataset, args.val_datase))
+
     # device
     device = torch.device("cpu")
     if args.cuda and torch.cuda.is_available():
@@ -161,13 +164,13 @@ def main(args):
     # export
     num_candidates = len(val_summaries[0])
     if args.save_summaries:
-        with open(args.save_summaries_path + "{}/".format(args.val_dataset) + "{}_texts_{}_beams_{}.pkl".format(args.val_dataset, len(val_texts), num_candidates), "wb") as f:
+        with open("../../summaries/{}/{}/".format(args.dataset, args.val_dataset) + "{}_texts_{}_beams_{}.pkl".format(args.val_dataset, len(val_texts), num_candidates), "wb") as f:
             pickle.dump(val_texts, f)
-        with open(args.save_summaries_path + "{}/".format(args.val_dataset) + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, len(val_texts), num_candidates), "wb") as f:
+        with open("../../summaries/{}/{}/".format(args.dataset, args.val_dataset) + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, len(val_texts), num_candidates), "wb") as f:
             pickle.dump(val_summaries, f)
-        with open(args.save_summaries_path + "{}/".format(args.val_dataset) + "{}_labels_{}_beams_{}.pkl".format(args.val_dataset, len(val_texts), num_candidates), "wb") as f:
+        with open("../../summaries/{}/{}/".format(args.dataset, args.val_dataset) + "{}_labels_{}_beams_{}.pkl".format(args.val_dataset, len(val_texts), num_candidates), "wb") as f:
             pickle.dump(val_labels, f)
-        print("saved generated summaries!", args.save_summaries_path + "{}/".format(args.val_dataset))
+        print("saved generated summaries!", "../../summaries/{}/{}/".format(args.dataset, args.val_dataset))
 
 
 

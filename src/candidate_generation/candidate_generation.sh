@@ -11,7 +11,6 @@ python main_candidate_generation.py \
 --val_dataset val \
 --inference_bs 2 \
 --save_summaries True \
---save_summaries_path /data/mathieu/2nd_stage_summarization/summaries/Reddit/2_diverse_beam_search/ \
 --generation_method diverse_beam_search \
 --num_return_sequences 15 \
 --num_beams 15 \
