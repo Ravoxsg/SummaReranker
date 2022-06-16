@@ -5,7 +5,7 @@ import pickle
 import sys
 import gc
 
-sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/") # todo: change to your folder path
+sys.path.append("/data/mathieu/SummaReranker/src/") # todo: change to your folder path
 
 from time import time 
 from nltk.tokenize import sent_tokenize
@@ -61,7 +61,7 @@ args = parser.parse_args()
 
 dataset_names = ["cnndm", "xsum", "reddit"]
 highlights = [True, False, False]
-val_data_sizes = [13368, 11332, 4213]
+val_data_sizes = [13368, 11332, 10]
 test_data_sizes = [11490, 11334, 4222]
 clean_ns = [True, False, False]
 
@@ -89,12 +89,12 @@ def main(args):
     if not(os.path.isdir(path + "{}/".format(args.label_metric))):
         os.makedirs(path + "{}/".format(args.label_metric))
     # load summaries
-    summaries_path = path + "{}/{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
+    summaries_path = path + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
     with open(summaries_path, "rb") as f:
         summaries = pickle.load(f)
     print("Loaded {} summaries".format(len(summaries)))
     # load labels
-    labels_path = path + "{}/{}_labels_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.val_dataset_size, args.num_candidates)
+    labels_path = path + "{}_labels_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset, args.val_dataset_size, args.num_candidates)
     with open(labels_path, "rb") as f:
         labels = pickle.load(f)
     print("Loaded {} labels".format(len(labels)))
