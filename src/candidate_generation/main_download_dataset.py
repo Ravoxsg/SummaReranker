@@ -10,7 +10,7 @@ import datasets
 
 from tqdm import tqdm
 
-sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/") # todo: change to your folder path
+sys.path.append("/data/mathieu/SummaReranker/src/") # todo: change to your folder path
 
 
 
@@ -20,7 +20,6 @@ parser.add_argument('--seed', type = int, default = 42)
 
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", choices= ["cnndm", "xsum", "reddit"])
-parser.add_argument('--data_folder', type = str, default = "/data/mathieu/temp/") # todo: change to where you want to save the data
 
 args = parser.parse_args()
 
@@ -49,7 +48,12 @@ contents = [(args.text_key, "text"), (args.summary_key, "summary")]
 
 
 def main(args):
-    seed_everything(42)
+    seed_everything(args.seed)
+
+    if not(os.path.isdir("../../data/")):
+        os.makedirs("../../data/")
+    if not(os.path.isdir("../../data/{}/".format(args.dataset))):
+        os.makedirs("../../data/{}/".format(args.dataset))
 
     if args.dataset in ["xsum"]:
         dataset = datasets.load_dataset(args.dataset_name)
@@ -87,11 +91,11 @@ def main(args):
         idx = 0
         for set_name in set_names:
             text = set_texts[idx]
-            text_path = args.data_folder + "/{}_text.txt".format(set_name)
+            text_path = "../../data/{}/".format(args.dataset) + "/{}_text.txt".format(set_name)
             write_to_txt(text, text_path)
 
             summary = set_summaries[idx]
-            summary_path = args.data_folder + "/{}_summary.txt".format(set_name)
+            summary_path = "../../data/{}/".format(args.dataset) + "/{}_summary.txt".format(set_name)
             write_to_txt(summary, summary_path)
 
             print(set_name, len(text), len(summary))
@@ -107,14 +111,14 @@ def main(args):
                 # single file with 1 data point per line
                 text = [x[content].replace("\n", " ") for x in dataset_set]
                 print(set, len(text))
-                path = args.data_folder + "/{}_{}.txt".format(set_name, content_name)
+                path = "../../data/{}/".format(args.dataset) + "/{}_{}.txt".format(set_name, content_name)
                 write_to_txt(text, path)
 
                 # individual files (to use for CNN/DM)
                 if args.highlights:
                     text = [x[content] for x in dataset_set]
                     print(set, len(text))
-                    folder_path = args.data_folder + "/" + set_name + "/" + content_name + "/"
+                    folder_path = "../../data/{}/".format(args.dataset) + "/" + set_name + "/" + content_name + "/"
                     try:
                         os.makedirs(folder_path)
                     except FileExistsError:
