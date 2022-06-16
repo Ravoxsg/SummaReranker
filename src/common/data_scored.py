@@ -24,8 +24,9 @@ def load_data(set, size, args, individual_txt=False, train=False):
                     set_ = set[i]
                     size_ = size[i]
                     model_name_ = args.train_model_names[i]
-                    scored_summaries_path_j_i = args.scored_summaries_path + "{}/{}/{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(
-                        generation_method, args.scoring_methods[j], set_, set_, model_name_, size_, args.num_beams
+                    scored_summaries_path_j_i = "../../{}/{}/{}/{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(
+                        args.dataset, args.val_dataset, generation_method, args.scoring_methods[j],
+                        set_, model_name_, size_, args.num_beams
                     )
                     print(scored_summaries_path_j_i)
                     with open(scored_summaries_path_j_i, "rb") as f:
@@ -48,8 +49,9 @@ def load_data(set, size, args, individual_txt=False, train=False):
         for generation_method in args.generation_methods:
             gen_scored_summaries = []
             for j in range(len(args.scoring_methods)):
-                scored_summaries_path_j = args.scored_summaries_path + "{}/{}/{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(
-                    generation_method, args.scoring_methods[j], set, set, args.model_name, size, args.num_beams
+                scored_summaries_path_j = "../../scored_summaries/{}/{}/{}/{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(
+                    args.dataset, args.val_dataset, generation_method, args.scoring_methods[j],
+                    set, args.model_name, size, args.num_beams
                 )
                 print(scored_summaries_path_j)
                 with open(scored_summaries_path_j, "rb") as f:
@@ -78,8 +80,8 @@ def read_data_files_individual(set, args, train=False):
     summaries = []
     if train:
         for set_ in set:
-            set_text_path = args.data_folder + "en/" + set_ + "/" + "text/"
-            set_summary_path = args.data_folder + "en/" + set_ + "/" + "summary/"
+            set_text_path = "../../data/{}/{}_text.txt".format(args.dataset, set)
+            set_summary_path = "../../data/{}/{}_summary.txt".format(args.dataset, set)
             n_docs = len(os.listdir(set_text_path))
             print("There are {} {} documents".format(n_docs, set_))
             for i in tqdm(range(n_docs)):
@@ -91,8 +93,8 @@ def read_data_files_individual(set, args, train=False):
                 summary_i = "".join(open(summary_path_i, "r").readlines())
                 summaries.append(summary_i)
     else:
-        set_text_path = args.data_folder + "en/" + set + "/" + "text/"
-        set_summary_path = args.data_folder + "en/" + set + "/" + "summary/"
+        set_text_path = "../../data/{}/{}_text.txt".format(args.dataset, set)
+        set_summary_path = "../../data/{}/{}_summary.txt".format(args.dataset, set)
         n_docs = len(os.listdir(set_text_path))
         print("There are {} {} documents".format(n_docs, set))
         for i in tqdm(range(n_docs)):
@@ -112,13 +114,13 @@ def prepare_data_files(set, args, train):
     summary_files = []    
     if train:
         for set_ in set:
-            text_file = args.data_folder + "en/" + "{}_text.txt".format(set_)
-            summary_file = args.data_folder + "en/" + "{}_summary.txt".format(set_)
+            text_file = "../../data/{}/{}_text.txt".format(args.dataset, set)
+            summary_file = "../../data/{}/{}_summary.txt".format(args.dataset, set)
             text_files.append(text_file)
             summary_files.append(summary_file)
     else:
-        text_file = args.data_folder + "en/" + "{}_text.txt".format(set)
-        summary_file = args.data_folder + "en/" + "{}_summary.txt".format(set)
+        text_file = "../../data/{}/{}_text.txt".format(args.dataset, set)
+        summary_file = "../../data/{}/{}_summary.txt".format(args.dataset, set)
         text_files.append(text_file)
         summary_files.append(summary_file)
 

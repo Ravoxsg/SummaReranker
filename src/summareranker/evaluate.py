@@ -5,7 +5,7 @@ import sys
 import time
 import torch
 
-sys.path.append("/data/mathieu/CODE_RELEASES/SummaReranker/src/")
+sys.path.append("/data/mathieu/SummaReranker/src/")
 
 from tqdm import tqdm
 from transformers import RobertaTokenizerFast, RobertaModel
@@ -26,20 +26,18 @@ parser.add_argument('--cuda', type=bool, default = True)
 
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", 
-                    choices= ["cnndm", "xsum", "reddit"]) 
-parser.add_argument('--data_folder', type=str, default = "/data/mathieu/DATASETS/RedditTIFU/data/") # CNNDM / XSum / RedditTIFU
+                    choices= ["cnndm", "xsum", "reddit"])
+parser.add_argument('--val_dataset', type=str, default = "small_val",
+                    choices = ["small_val", "val", "test"])
 parser.add_argument('--generation_methods_str', type=str, default = "1_beam_search")
 parser.add_argument('--scoring_methods_str', type=str, default = "1a_rouge_1+1b_rouge_2+1c_rouge_l") 
-parser.add_argument('--scored_summaries_path', type = str, default = "/data/mathieu/2nd_stage_summarization/reranking_data/Reddit/") 
 parser.add_argument('--sep_symbol', type=str, default = "[SEP]")
-parser.add_argument('--val_dataset', type=str, default = "small_val",
-                    choices = ["small_val", "val", "test"]) 
 parser.add_argument('--val_size', type=int, default = 300) 
 
 # base model
-parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1",
-                    choices = ["pegasus_cnndm", "bart_cnndm", "pegasus_xsum", "bart_xsum", 
-                    "pegasus_reddit_train_1", "bart_reddit"])
+parser.add_argument('--model_name', type = str, default = "pegasus_unsupervised",
+                    choices = ["pegasus_unsupervised", "pegasus_cnndm", "bart_cnndm",
+                    "pegasus_xsum", "bart_xsum", "pegasus_reddit_train_1", "bart_reddit"])
 parser.add_argument('--num_beams', type=int, default = 15)
 
 # model
