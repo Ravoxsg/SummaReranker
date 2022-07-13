@@ -35,7 +35,7 @@ def overall_eval(val_texts, val_summaries, val_labels, args):
     if args.eval_new_ngram:
         new_ngram_eval(val_texts, val_summaries, args)
     # Overlap with source
-    if args.eval_rouge_text:
+    if args.eval_rouge_source:
         r1_text, r2_text, rl_text = rouge_eval("source", val_summaries, val_texts, val_texts, args)
         if args.check_correlation:
             r1_p = pearsonr(r1_true, r1_text)[0]

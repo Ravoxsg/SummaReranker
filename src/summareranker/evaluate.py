@@ -27,12 +27,12 @@ parser.add_argument('--cuda', type=bool, default = True)
 # data
 parser.add_argument('--dataset', type=str, default = "reddit", 
                     choices= ["cnndm", "xsum", "reddit"])
-parser.add_argument('--val_dataset', type=str, default = "small_val",
-                    choices = ["small_val", "val", "test"])
 parser.add_argument('--generation_methods_str', type=str, default = "diverse_beam_search")
 parser.add_argument('--scoring_methods_str', type=str, default = "rouge_1+rouge_2+rouge_l")
 parser.add_argument('--sep_symbol', type=str, default = "[SEP]")
-parser.add_argument('--val_size', type=int, default = 300) 
+parser.add_argument('--val_dataset', type=str, default = "small_val",
+                    choices = ["small_val", "val", "test"])
+parser.add_argument('--max_val_size', type=int, default = 300)
 
 # base model
 parser.add_argument('--model_name', type = str, default = "pegasus_unsupervised",
@@ -68,8 +68,7 @@ parser.add_argument('--eval_rouge', type = bool, default = True)
 parser.add_argument('--eval_bertscore', type = bool, default = True)
 parser.add_argument('--eval_bartscore', type = bool, default = True)
 parser.add_argument('--eval_new_ngram', type = bool, default = True)
-parser.add_argument('--eval_rouge_text', type = bool, default = False)
-parser.add_argument('--check_correlation', type = bool, default = False)
+parser.add_argument('--eval_rouge_source', type = bool, default = False)
 
 args = parser.parse_args()
 args.generation_methods = args.generation_methods_str.split("+")
@@ -78,8 +77,8 @@ args.n_tasks = len(args.scoring_methods)
 
 dataset_names = ["cnndm", "xsum", "reddit"]
 highlights = [True, False, False]
-val_data_sizes = [13368, 11332, 4213]
-test_data_sizes = [11490, 11334, 4222]
+val_sizes = [13368, 11332, 4213]
+test_sizes = [11490, 11334, 4222]
 max_lengths = [384, 448, 384]
 max_summary_lengths = [128, 64, 128]
 clean_ns = [True, False, False]
@@ -88,12 +87,11 @@ idx = dataset_names.index(args.dataset)
 
 args.highlights = highlights[idx]
 if args.val_dataset == "small_val":
-    args.val_data_size = 300
+    args.val_size = 300
 elif args.val_dataset == "val":
-    args.val_data_size = val_data_sizes[idx]
+    args.val_size = val_sizes[idx]
 elif args.val_dataset == "test":
-    args.val_data_size = test_data_sizes[idx]
-args.test_data_size = test_data_sizes[idx]
+    args.val_size = test_sizes[idx]
 args.max_length = max_lengths[idx]
 args.max_summary_length = max_summary_lengths[idx]
 args.clean_n = clean_ns[idx]
@@ -119,7 +117,7 @@ def main(args):
 
     # data
     set = args.val_dataset
-    size = args.val_data_size
+    size = args.val_size
     texts, summaries, scored_summaries = load_data(set, size, args, individual_txt = args.highlights)
     print("loaded new data!", len(texts), len(summaries), len(scored_summaries), len(scored_summaries[0]),
           len(scored_summaries[0][0]), len(scored_summaries[0][1]))
@@ -134,6 +132,9 @@ def main(args):
     # dataset
     mode = "val"
     val_dataset = MultitaskRerankingDataset(mode, tokenizer, texts, scored_summaries, summaries, args)
+    val_dataset.texts = val_dataset.texts[:args.max_val_size]
+    val_dataset.scored_summaries = val_dataset.scored_summaries[:args.max_val_size]
+    val_dataset.labels = val_dataset.labels[:args.max_val_size]
     print("There are {} {} batches".format(int(len(val_dataset.texts) / args.inference_bs), set))
     
     # data loader
@@ -166,16 +167,12 @@ def main(args):
         batch_labels = batch["label"]
         val_labels += batch_labels
 
-        text_ids = batch["text_input_ids"].to(device)
-        text_mask = batch["text_attn_mask"].to(device)
-        cand_ids = batch["cand_input_ids"].to(device)
-        cand_mask = batch["cand_attn_mask"].to(device)
         text_and_summaries_ids = batch["text_and_summaries_input_ids"].to(device)
         text_and_summaries_mask = batch["text_and_summaries_attn_mask"].to(device)
         scores = batch["scores"]
 
         with torch.no_grad():
-            output = model(mode, text_ids, text_mask, text_and_summaries_ids, text_and_summaries_mask, scores)
+            output = model(mode, text_and_summaries_ids, text_and_summaries_mask, scores)
             predictions_idx = output["total_predictions_idx"]
             val_preds_idx += predictions_idx
             val_predictions.append(output["prediction_sum"].item()) 

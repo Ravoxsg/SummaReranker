@@ -103,7 +103,7 @@ class ModelMultitaskBinary(nn.Module):
         m_corr = np.mean(correlations)
         print("Mean intersection between pairs of pred idx: {:.4f}, mean Pearson correlation: {:.4f}".format(m_intersection, m_corr))
             
-    def forward(self, mode, text_ids, text_mask, text_and_summaries_ids, text_and_summaries_mask, scores):
+    def forward(self, mode, text_and_summaries_ids, text_and_summaries_mask, scores):
         loss = torch.tensor(0.0).to(self.pretrained_model.device)
         accuracy = [0 for j in range(self.args.n_tasks)]
         rank = [0 for j in range(self.args.n_tasks)]
