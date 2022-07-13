@@ -107,6 +107,8 @@ parser.add_argument('--save_model', type=bool, default=True)
 parser.add_argument('--save_model_path', type=str, default="saved_models/reddit/debug")
 
 args = parser.parse_args()
+args.generation_methods = args.generation_methods_str.split("+")
+args.scoring_methods = args.scoring_methods_str.split("+")
 args.n_tasks = len(args.scoring_methods)
 
 dataset_names = ["cnndm", "xsum", "reddit"]
