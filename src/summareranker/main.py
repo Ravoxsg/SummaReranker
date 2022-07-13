@@ -15,7 +15,7 @@ from transformers import Trainer, TrainingArguments, default_data_collator
 from torch.utils.data.dataloader import DataLoader
 from transformers.file_utils import is_datasets_available
 
-from common.utils import seed_everything, check_scores, check_training_data
+from common.utils import seed_everything, check_scores
 from common.data_scored import load_data
 from utils import *
 from dataset import MultitaskRerankingDatasetTrain
@@ -47,8 +47,6 @@ parser.add_argument('--max_val_size', type=int, default=300)
 # test
 parser.add_argument('--test_dataset', type=str, default="small_val")
 parser.add_argument('--max_test_size', type=int, default=300)
-#
-parser.add_argument("--check_training_data", type=bool, default=True)
 
 # base model
 parser.add_argument('--base_model_type', type=str, default="pegasus", choices = ["pegasus", "bart"])
@@ -178,10 +176,6 @@ def main(args):
 
     # tokenizer
     tokenizer = build_tokenizer(args)
-
-    # check data
-    if args.check_training_data:
-        check_training_data(args)
 
     # data & datasets
     datasets = []
