@@ -117,14 +117,14 @@ train_sizes = [[143000, 144113], [102000, 102045], [17000, 16704]]
 val_sizes = [13368, 11332, 4213]
 test_sizes = [11490, 11334, 4222]
 pegasus_train_model_names = [
-    ["pegasus_cnndm_first_half_shuffled_1", "pegasus_cnndm_second_half_shuffled_1"],
-    ["pegasus_xsum_first_half_shuffled_1", "pegasus_xsum_second_half_shuffled_1"],
-    ["pegasus_reddit_first_half_shuffled_1", "pegasus_reddit_second_half_shuffled_1"]
+    ["pegasus_cnndm_second_half_shuffled_1", "pegasus_cnndm_first_half_shuffled_1"],
+    ["pegasus_xsum_second_half_shuffled_1", "pegasus_xsum_first_half_shuffled_1"],
+    ["pegasus_reddit_second_half_shuffled_1", "pegasus_reddit_first_half_shuffled_1"]
 ]
 bart_train_model_names = [
-    ["bart_cnndm_first_half_shuffled_1", "bart_cnndm_second_half_shuffled_1"],
-    ["bart_xsum_first_half_shuffled_1", "bart_xsum_second_half_shuffled_1"],
-    ["bart_reddit_first_half_shuffled_2", "bart_reddit_second_half_shuffled_2"]
+    ["bart_cnndm_second_half_shuffled_1", "bart_cnndm_first_half_shuffled_1"],
+    ["bart_xsum_second_half_shuffled_1", "bart_xsum_first_half_shuffled_1"],
+    ["bart_reddit_second_half_shuffled_2", "bart_reddit_first_half_shuffled_2"]
 ]
 pegasus_model_names = [
     "pegasus_cnndm", "pegasus_xsum", "pegasus_reddit_train_1"

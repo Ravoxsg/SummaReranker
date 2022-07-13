@@ -24,8 +24,11 @@ def load_data(set, size, args, individual_txt=False, train=False):
                     set_ = set[i]
                     size_ = size[i]
                     model_name_ = args.train_model_names[i]
-                    scored_summaries_path_j_i = "../../{}/{}/{}/{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(
-                        args.dataset, args.val_dataset, generation_method, args.scoring_methods[j],
+                    print(set_)
+                    print(size_)
+                    print(model_name_)
+                    scored_summaries_path_j_i = "../../scored_summaries/{}/{}/{}/{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(
+                        args.dataset, set_, generation_method, args.scoring_methods[j],
                         set_, model_name_, size_, args.num_beams
                     )
                     print(scored_summaries_path_j_i)
@@ -50,7 +53,7 @@ def load_data(set, size, args, individual_txt=False, train=False):
             gen_scored_summaries = []
             for j in range(len(args.scoring_methods)):
                 scored_summaries_path_j = "../../scored_summaries/{}/{}/{}/{}/{}_scored_summaries_{}_{}_beams_{}.pkl".format(
-                    args.dataset, args.val_dataset, generation_method, args.scoring_methods[j],
+                    args.dataset, set, generation_method, args.scoring_methods[j],
                     set, args.model_name, size, args.num_beams
                 )
                 print(scored_summaries_path_j)
@@ -80,8 +83,8 @@ def read_data_files_individual(set, args, train=False):
     summaries = []
     if train:
         for set_ in set:
-            set_text_path = "../../data/{}/{}_text.txt".format(args.dataset, set)
-            set_summary_path = "../../data/{}/{}_summary.txt".format(args.dataset, set)
+            set_text_path = "../../data/{}/{}_text.txt".format(args.dataset, set_)
+            set_summary_path = "../../data/{}/{}_summary.txt".format(args.dataset, set_)
             n_docs = len(os.listdir(set_text_path))
             print("There are {} {} documents".format(n_docs, set_))
             for i in tqdm(range(n_docs)):
@@ -114,8 +117,8 @@ def prepare_data_files(set, args, train):
     summary_files = []    
     if train:
         for set_ in set:
-            text_file = "../../data/{}/{}_text.txt".format(args.dataset, set)
-            summary_file = "../../data/{}/{}_summary.txt".format(args.dataset, set)
+            text_file = "../../data/{}/{}_text.txt".format(args.dataset, set_)
+            summary_file = "../../data/{}/{}_summary.txt".format(args.dataset, set_)
             text_files.append(text_file)
             summary_files.append(summary_file)
     else:
