@@ -37,7 +37,7 @@ parser.add_argument('--model_name', type=str, default = "pegasus_unsupervised",
                     "pegasus_reddit_train_1", "bart_reddit"])
 parser.add_argument('--hidden_size', type = int, default = 768) # 768 / 1024`
 parser.add_argument('--cache_dir', type = str,
-                    default = "/data/mathieu/hf_models/pegasus-large/")
+                    default = "../../../hf_models/pegasus-large/")
 parser.add_argument('--load_model', type = bool, default = False)
 parser.add_argument('--load_model_path', type = str,
                     default = "/data/mathieu/2nd_stage_summarization/1_base_finetuning/ft_saved_models/pegasus_reddit_train_1/checkpoint-1250/pytorch_model.bin") # todo: change to where you saved the finetuned checkpoint

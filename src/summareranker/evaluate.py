@@ -43,7 +43,7 @@ parser.add_argument('--num_beams', type=int, default = 15)
 # model
 parser.add_argument('--sharp_pos', type=bool, default = False)
 parser.add_argument('--model', type=str, default = "roberta-large")  
-parser.add_argument('--cache_dir', type=str, default = "/data/mathieu/hf_models/roberta-large/")
+parser.add_argument('--cache_dir', type=str, default = "../../../hf_models/roberta-large/")
 parser.add_argument('--hidden_size', type=int, default = 1024) 
 parser.add_argument('--non_linear_repres', type=bool, default = True)
 parser.add_argument('--use_shared_bottom', type = bool, default = True)

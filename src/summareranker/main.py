@@ -64,7 +64,7 @@ parser.add_argument('--sharp_pos', type=bool, default=False)
 # encoder
 parser.add_argument('--model', type=str, default="roberta-large")
 parser.add_argument('--model_type', type=str, default="roberta", choices=["bert", "roberta"])
-parser.add_argument('--cache_dir', type=str, default="/data/mathieu/hf_models/roberta-large/")
+parser.add_argument('--cache_dir', type=str, default="../../../hf_models/roberta-large/")
 parser.add_argument('--hidden_size', type=int, default=1024) # 768 / 1024
 parser.add_argument('--non_linear_repres', type=bool, default=True)
 # tackle source length encoding

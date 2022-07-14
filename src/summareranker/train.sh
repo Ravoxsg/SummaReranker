@@ -1,0 +1,16 @@
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 evaluate.py \
+--dataset reddit \
+--generation_methods_str diverse_beam_search \
+--scoring_methods_str rouge_1+rouge_2+rouge_l \
+--base_model_type pegasus \
+--num_beams 15 \
+--model roberta-large \
+--cache_dir ../../../hf_models/roberta-large \
+--num_experts 6 \
+--k 3 \
+--train_bs 1 \
+--gradient_accumulation_steps 64 \
+--inference_bs 60 \
+--lr 1e-5 \
+--save_model True \
+--save_model_path saved_models/reddit/model_1 \

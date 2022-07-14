@@ -3,7 +3,7 @@ python main_candidate_generation.py \
 --model_type pegasus \
 --model google/pegasus-large \
 --model_name pegasus_unsupervised \
---cache_dir /data/mathieu/hf_models/pegasus-large \
+--cache_dir ../../../hf_models/pegasus-large \
 --load_model False \
 --ft_model True \
 --val_dataset val \
