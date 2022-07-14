@@ -40,13 +40,13 @@ parser.add_argument('--scoring_methods_str', type=str, default = "rouge_1+rouge_
 parser.add_argument('--sep_symbol', type=str, default="[SEP]")
 # train
 parser.add_argument('--train_datasets', type=str, default=["first_half_train_shuffled", "second_half_train_shuffled"])
-parser.add_argument('--max_train_size', type=int, default=1000)
+parser.add_argument('--max_train_size', type=int, default=1000000)
 # val
-parser.add_argument('--val_dataset', type=str, default="small_val")
-parser.add_argument('--max_val_size', type=int, default=300)
+parser.add_argument('--val_dataset', type=str, default="val")
+parser.add_argument('--max_val_size', type=int, default=10000)
 # test
-parser.add_argument('--test_dataset', type=str, default="small_val")
-parser.add_argument('--max_test_size', type=int, default=300)
+parser.add_argument('--test_dataset', type=str, default="test")
+parser.add_argument('--max_test_size', type=int, default=10000)
 
 # base model
 parser.add_argument('--base_model_type', type=str, default="pegasus", choices = ["pegasus", "bart"])
@@ -104,7 +104,7 @@ parser.add_argument('--metric_for_best_model', type=str, default="overall_sum", 
 
 # export
 parser.add_argument('--save_model', type=bool, default=True)
-parser.add_argument('--save_model_path', type=str, default="saved_models/reddit/debug")
+parser.add_argument('--save_model_path', type=str, default="saved_models/reddit/model_1")
 
 args = parser.parse_args()
 args.generation_methods = args.generation_methods_str.split("+")
