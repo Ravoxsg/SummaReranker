@@ -17,7 +17,8 @@ from common.utils import seed_everything
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--seed', type = int, default = 42)
-parser.add_argument('--dataset', type=str, default = "reddit", choices=["cnndm", "xsum", "reddit"])
+parser.add_argument('--dataset', type=str, default = "reddit",
+                    choices=["cnndm", "xsum", "reddit"])
 
 args = parser.parse_args()
 

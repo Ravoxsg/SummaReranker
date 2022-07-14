@@ -39,7 +39,8 @@ parser.add_argument("--local_rank", type=int, default = 0, help="Local rank. Nec
 parser.add_argument('--train', type=bool, default = True)
 
 # data
-parser.add_argument('--dataset', type=str, default = "reddit", choices=["cnndm", "xsum", "reddit"])
+parser.add_argument('--dataset', type=str, default = "reddit",
+                    choices=["cnndm", "xsum", "reddit"])
 # train
 parser.add_argument('--train_dataset', type = str, default = "train")
 parser.add_argument('--max_train_size', type=int, default = 1000000)
@@ -51,7 +52,8 @@ parser.add_argument('--test_dataset', type = str, default = "test")
 parser.add_argument('--max_test_size', type = int, default = 1000000)
 
 # model
-parser.add_argument('--model_type', type=str, default = "pegasus", choices=["pegasus", "bart"]) #
+parser.add_argument('--model_type', type=str, default = "pegasus",
+                    choices=["pegasus", "bart"])
 parser.add_argument('--model', type=str, default = "google/pegasus-large",
                     choices=["google/pegasus-large", "facebook/bart-large"])
 parser.add_argument('--hidden_size', type=int, default = 768)
@@ -72,7 +74,8 @@ parser.add_argument('--repetition_penalty', type = float, default = 1.0)
 # evaluation
 parser.add_argument('--eval_epoch_0', type = bool, default = True)
 parser.add_argument('--evaluation_strategy', type=str, default = "steps")
-parser.add_argument('--evaluation_method', type=str, default = "generation", choices=["generation", "loss"])
+parser.add_argument('--evaluation_method', type=str, default = "generation",
+                    choices=["generation", "loss"])
 parser.add_argument('--eval_test', type=bool, default = False)
 
 # summaries

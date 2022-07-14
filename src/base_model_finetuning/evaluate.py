@@ -22,13 +22,15 @@ parser.add_argument('--debug', type = bool, default = False)
 parser.add_argument('--debug_size', type = int, default = 30)
 
 # data
-parser.add_argument('--dataset', type = str, default = "reddit", choices = ["cnndm", "xsum", "reddit"])
+parser.add_argument('--dataset', type = str, default = "reddit",
+                    choices = ["cnndm", "xsum", "reddit"])
 parser.add_argument('--val_max_size', type = int, default = 100000)
 parser.add_argument('--check_data_pipe', type = bool, default = False)
 parser.add_argument('--compute_r1s', type = bool, default = False)
 
 # model
-parser.add_argument('--model_type', type = str, default = "pegasus", choices=["pegasus", "bart"])
+parser.add_argument('--model_type', type = str, default = "pegasus",
+                    choices=["pegasus", "bart"])
 parser.add_argument('--model', type = str, default = "google/pegasus-large",
                     choices=["google/pegasus-large", "facebook/bart-large"])
 parser.add_argument('--hidden_size', type = int, default = 768)
@@ -64,7 +66,6 @@ parser.add_argument('--num_return_sequences', type = int, default = 1) # default
 parser.add_argument('--repetition_penalty', type = float, default = 1.0) # 1.0
 parser.add_argument('--stemmer', type = bool, default = True)
 parser.add_argument('--n_show_summaries', type = int, default = 1)
-parser.add_argument('--rouge_to_use', type = str, default = "rouge_score") # in ["rouge_score", "rouge"]
 
 args = parser.parse_args()
 

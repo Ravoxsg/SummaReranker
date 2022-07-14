@@ -28,19 +28,25 @@ parser.add_argument('--dataset', type=str, default = "reddit",
                     choices= ["cnndm", "xsum", "reddit"])
 
 # model
-parser.add_argument('--model_type', type = str, default = "pegasus") # in ["t5", "pegasus", "bart"]
+parser.add_argument('--model_type', type = str, default = "pegasus",
+                    choices=["pegasus", "bart"])
 parser.add_argument('--model', type = str, default = "google/pegasus-large",
                     choices = ["google/pegasus-large", "google/pegasus-cnn_dailymail", "google/pegasus-xsum",
                     "facebook/bart-large", "facebook/bart-large-cnn", "facebook/bart-large-xsum"])
 parser.add_argument('--model_name', type=str, default = "pegasus_unsupervised",
-                    choices = ["pegasus_cnndm", "bart_cnndm", "pegasus_xsum", "bart_xsum", 
-                    "pegasus_reddit_train_1", "bart_reddit"])
+                    choices = ["pegasus_unsupervised", "bart_unsupervised",
+                    "pegasus_cnndm_first_half_shuffled_1", "pegasus_cnndm_second_half_shuffled_1", "pegasus_cnndm",
+                    "bart_cnndm_first_half_shuffled_1", "bart_cnndm_second_half_shuffled_1", "bart_cnndm",
+                    "pegasus_xsum_first_half_shuffled_1", "pegasus_xsum_second_half_shuffled_1", "pegasus_xsum",
+                    "bart_xsum_first_half_shuffled_1", "bart_xsum_second_half_shuffled_1", "bart_xsum",
+                    "pegasus_reddit_first_half_shuffled_1", "pegasus_reddit_second_half_shuffled_1", "pegasus_reddit_train_1",
+                    "bart_reddit_first_half_shuffled_1", "bart_reddit_second_half_shuffled_1", "bart_reddit_train_1"])
 parser.add_argument('--hidden_size', type = int, default = 768) # 768 / 1024`
 parser.add_argument('--cache_dir', type = str,
                     default = "../../../hf_models/pegasus-large/")
 parser.add_argument('--load_model', type = bool, default = False)
 parser.add_argument('--load_model_path', type = str,
-                    default = "/data/mathieu/2nd_stage_summarization/1_base_finetuning/ft_saved_models/pegasus_reddit_train_1/checkpoint-1250/pytorch_model.bin") # todo: change to where you saved the finetuned checkpoint
+                    default = "../base_model_finetuning/ft_saved_models/reddit/pegasus_reddit_train_1/checkpoint-5/pytorch_model.bin") # todo: change to where you saved the finetuned checkpoint
 parser.add_argument('--ft_model', type = bool, default = True)
 
 # summary generation

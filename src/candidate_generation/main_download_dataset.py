@@ -19,7 +19,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type = int, default = 42)
 
 # data
-parser.add_argument('--dataset', type=str, default = "reddit", choices= ["cnndm", "xsum", "reddit"])
+parser.add_argument('--dataset', type=str, default = "reddit",
+                    choices= ["cnndm", "xsum", "reddit"])
 
 args = parser.parse_args()
 

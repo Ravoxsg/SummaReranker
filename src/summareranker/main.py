@@ -34,7 +34,8 @@ parser.add_argument('--sharded_ddp', type=str, default="simple") # ["", "simple"
 parser.add_argument("--local_rank", type=int, default=0, help="Local rank. Necessary for using the torch.distributed.launch utility.")
 
 # data
-parser.add_argument('--dataset', type=str, default = "reddit", choices= ["cnndm", "xsum", "reddit"])
+parser.add_argument('--dataset', type=str, default = "reddit",
+                    choices= ["cnndm", "xsum", "reddit"])
 parser.add_argument('--generation_methods_str', type=str, default = "diverse_beam_search")
 parser.add_argument('--scoring_methods_str', type=str, default = "rouge_1+rouge_2+rouge_l")
 parser.add_argument('--sep_symbol', type=str, default="[SEP]")
@@ -49,21 +50,24 @@ parser.add_argument('--test_dataset', type=str, default="test")
 parser.add_argument('--max_test_size', type=int, default=10000)
 
 # base model
-parser.add_argument('--base_model_type', type=str, default="pegasus", choices = ["pegasus", "bart"])
+parser.add_argument('--base_model_type', type=str, default="pegasus",
+                    choices = ["pegasus", "bart"])
 parser.add_argument('--num_beams', type=int, default=15)
 
 # model
 # candidate selection
 parser.add_argument('--filter_out_duplicates', type=bool, default=True)
 parser.add_argument('--prune_candidates', type=bool, default=True)
-parser.add_argument('--sampling_strat', type=str, default="bottom", choices=["random", "bottom"])
+parser.add_argument('--sampling_strat', type=str, default="bottom",
+                    choices=["random", "bottom"])
 parser.add_argument('--n_positives', type=int, default=1)
 parser.add_argument('--n_negatives', type=int, default=1)
 parser.add_argument('--max_n_candidates', type=int, default=2)
 parser.add_argument('--sharp_pos', type=bool, default=False)
 # encoder
 parser.add_argument('--model', type=str, default="roberta-large")
-parser.add_argument('--model_type', type=str, default="roberta", choices=["bert", "roberta"])
+parser.add_argument('--model_type', type=str, default="roberta",
+                    choices=["bert", "roberta"])
 parser.add_argument('--cache_dir', type=str, default="../../../hf_models/roberta-large/")
 parser.add_argument('--hidden_size', type=int, default=1024) # 768 / 1024
 parser.add_argument('--non_linear_repres', type=bool, default=True)
@@ -93,14 +97,16 @@ parser.add_argument('--gradient_accumulation_steps', type=int, default=64)
 parser.add_argument('--lr', type=float, default=1e-5)
 parser.add_argument('--wd', type=float, default=0)
 parser.add_argument('--gradient_clipping', type=float, default=10e10)
-parser.add_argument('--scheduler', type=str, default="linear", choices=["constant", "linear"])
+parser.add_argument('--scheduler', type=str, default="linear",
+                    choices=["constant", "linear"])
 parser.add_argument('--warmup_ratio', type=float, default=0.05)
 
 # evaluation
 parser.add_argument('--eval_epoch_0', type=bool, default=True)
 parser.add_argument('--evaluation_strategy', type=str, default="steps")
 parser.add_argument('--n_checkpoints_to_save', type=int, default=2)
-parser.add_argument('--metric_for_best_model', type=str, default="overall_sum", choices=["prediction_sum", "overall_sum"])
+parser.add_argument('--metric_for_best_model', type=str, default="overall_sum",
+                    choices=["prediction_sum", "overall_sum"])
 
 # export
 parser.add_argument('--save_model', type=bool, default=True)
