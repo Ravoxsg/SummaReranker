@@ -8,6 +8,10 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 main_tr
 --train_dataset first_half_train_shuffled \
 --model_type pegasus \
 --save_model_path ft_saved_models/reddit/pegasus_reddit_first_half_shuffled_1 \
+--n_epochs 1 \
+--max_train_size 10 \
+--max_val_size 10 \
+--eval_every 5 \
 
 # fine-tune model on the 2nd half of the training set
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 main_trainer.py \
@@ -15,6 +19,10 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 main_tr
 --train_dataset second_half_train_shuffled \
 --model_type pegasus \
 --save_model_path ft_saved_models/reddit/pegasus_reddit_second_half_shuffled_1 \
+--n_epochs 1 \
+--max_train_size 10 \
+--max_val_size 10 \
+--eval_every 5 \
 
 # fine-tune model on the entire training set (for Reddit)
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 main_trainer.py \
@@ -22,3 +30,7 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 main_tr
 --train_dataset train \
 --model_type pegasus \
 --save_model_path ft_saved_models/reddit/pegasus_reddit_train_1 \
+--n_epochs 1 \
+--max_train_size 10 \
+--max_val_size 10 \
+--eval_every 10 \

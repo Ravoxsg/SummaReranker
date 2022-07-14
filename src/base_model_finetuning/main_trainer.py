@@ -45,10 +45,10 @@ parser.add_argument('--train_dataset', type = str, default = "train")
 parser.add_argument('--max_train_size', type=int, default = 1000000)
 # val
 parser.add_argument('--val_dataset', type = str, default = "val")
-parser.add_argument('--max_val_size', type = int, default = 100000)
+parser.add_argument('--max_val_size', type = int, default = 1000000)
 # test
 parser.add_argument('--test_dataset', type = str, default = "test")
-parser.add_argument('--max_test_size', type = int, default = 100000)
+parser.add_argument('--max_test_size', type = int, default = 1000000)
 
 # model
 parser.add_argument('--model_type', type=str, default = "pegasus", choices=["pegasus", "bart"]) #

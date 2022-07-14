@@ -40,9 +40,7 @@ def main(args):
     seed_everything(args.seed)
 
     # load full training
-    train_summaries = []
-    train_texts = []
-    train_top_sents = []
+    train_summaries, train_texts = [], []
     with open(args.data_folder + "train_summary.txt", "rb") as f:
         for l in f.readlines():
             train_summaries.append(l)
@@ -54,12 +52,11 @@ def main(args):
     # shuffle
     p = np.random.permutation(len(train_texts))
     print(p[:10])
-    with open("dataset_permutations/{}_train_permutation.pkl".format(args.dataset_name), "wb") as f:
+    with open("dataset_permutations/{}_train_permutation.pkl".format(args.dataset), "wb") as f:
         pickle.dump(p, f)
         print("saved permutation!")
     train_summaries = [train_summaries[i] for i in p]
     train_texts = [train_texts[i] for i in p]
-    train_top_sents = [train_top_sents[i] for i in p]
     print("permuted the training set!")
     p_to_normal = {}
     for i in range(len(p)):
@@ -68,8 +65,7 @@ def main(args):
     # 1st half - full files
     first_half_summaries = train_summaries[:args.thresh]
     first_half_texts = train_texts[:args.thresh]
-    first_half_top_sents = train_top_sents[:args.thresh]
-    print(len(first_half_summaries), len(first_half_texts), len(first_half_top_sents))
+    print(len(first_half_summaries), len(first_half_texts))
     with open(args.data_folder + "first_half_train_shuffled_summary.txt", "wb") as f:
         for l in first_half_summaries:
             f.write(l)
@@ -80,8 +76,7 @@ def main(args):
     # 2nd half - full files
     second_half_summaries = train_summaries[args.thresh:]
     second_half_texts = train_texts[args.thresh:]
-    second_half_top_sents = train_top_sents[args.thresh:]
-    print(len(second_half_summaries), len(second_half_texts), len(second_half_top_sents))
+    print(len(second_half_summaries), len(second_half_texts))
     with open(args.data_folder + "second_half_train_shuffled_summary.txt", "wb") as f:
         for l in second_half_summaries:
             f.write(l)
