@@ -25,7 +25,7 @@ dataset_names = ["cnndm", "xsum", "reddit"]
 threshs = [143000, 102000, 17000]
 highlights = [True, False, False]
 
-idx = dataset_names.index(args.dataset_name)
+idx = dataset_names.index(args.dataset)
 args.data_folder = "../../data/{}/".format(args.dataset)
 args.thresh = threshs[idx]
 args.individual_files = highlights[idx]

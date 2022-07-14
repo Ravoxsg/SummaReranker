@@ -1,4 +1,4 @@
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 evaluate.py \
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 main.py \
 --dataset reddit \
 --generation_methods_str diverse_beam_search \
 --scoring_methods_str rouge_1+rouge_2+rouge_l \
