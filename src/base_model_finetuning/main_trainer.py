@@ -39,7 +39,7 @@ parser.add_argument("--local_rank", type=int, default = 0, help="Local rank. Nec
 parser.add_argument('--train', type=bool, default = True)
 
 # data
-parser.add_argument('--dataset_name', type=str, default = "reddit", choices=["cnndm", "xsum", "reddit"])
+parser.add_argument('--dataset', type=str, default = "reddit", choices=["cnndm", "xsum", "reddit"])
 # train
 parser.add_argument('--train_dataset', type = str, default = "train")
 parser.add_argument('--max_train_size', type=int, default = 1000000)
@@ -88,7 +88,6 @@ parser.add_argument('--save_model_path', type=str, default = "ft_saved_models/re
 args = parser.parse_args()
 
 dataset_names = ["cnndm", "xsum", "reddit"]
-datasets = ["CNNDM", "XSum", "Reddit"]
 max_lengths = [1024, 512, 512]
 train_sizes = [287113, 204045, 33704]
 first_half_train_sizes = [143000, 102000, 17000]
@@ -108,7 +107,6 @@ highlights = [True, False, False]
 clean_ns = [True, False, False]
 
 idx = dataset_names.index(args.dataset_name)
-args.dataset = datasets[idx]
 args.data_folder = "../../data/{}".format(args.dataset)
 args.max_length = max_lengths[idx]
 args.train_size = train_sizes[idx]

@@ -17,18 +17,16 @@ from common.utils import seed_everything
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--seed', type = int, default = 42)
-parser.add_argument('--dataset_name', type=str, default = "reddit", choices=["cnndm", "xsum", "reddit"])
+parser.add_argument('--dataset', type=str, default = "reddit", choices=["cnndm", "xsum", "reddit"])
 
 args = parser.parse_args()
 
 dataset_names = ["cnndm", "xsum", "reddit"]
-datasets = ["CNNDM", "XSum", "Reddit"]
 threshs = [143000, 102000, 17000]
 highlights = [True, False, False]
 
 idx = dataset_names.index(args.dataset_name)
-args.dataset = datasets[idx]
-args.data_folder = "../data/{}/".format(args.dataset)
+args.data_folder = "../../data/{}/".format(args.dataset)
 args.thresh = threshs[idx]
 args.individual_files = highlights[idx]
 
