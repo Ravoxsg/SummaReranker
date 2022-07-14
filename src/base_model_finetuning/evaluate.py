@@ -22,8 +22,7 @@ parser.add_argument('--debug', type = bool, default = False)
 parser.add_argument('--debug_size', type = int, default = 30)
 
 # data
-parser.add_argument('--dataset_name', type = str, default = "reddit")
-# ["cnndm", "xsum", "reddit"]
+parser.add_argument('--dataset', type = str, default = "reddit", choices = ["cnndm", "xsum", "reddit"])
 parser.add_argument('--val_max_size', type = int, default = 100000)
 parser.add_argument('--check_data_pipe', type = bool, default = False)
 parser.add_argument('--compute_r1s', type = bool, default = False)
@@ -70,7 +69,6 @@ parser.add_argument('--rouge_to_use', type = str, default = "rouge_score") # in 
 args = parser.parse_args()
 
 dataset_names = ["cnndm", "xsum", "reddit"]
-datasets = ["CNNDM", "XSum", "Reddit"]
 max_lengths = [1024, 512, 512]
 max_summary_lengths = [128, 64, 64]
 length_penalties_pegasus = [0.8, 0.8, 0.6]
@@ -80,8 +78,7 @@ no_repeat_ngram_sizes_bart = [0, 3, 3]
 highlights = [True, False, False]
 clean_ns = [True, False, False]
 
-idx = dataset_names.index(args.dataset_name)
-args.dataset = datasets[idx]
+idx = dataset_names.index(args.dataset)
 args.data_folder = "/data/mathieu/DATASETS/{}/data/".format(args.dataset)
 args.max_length = max_lengths[idx]
 args.max_summary_length = max_summary_lengths[idx]

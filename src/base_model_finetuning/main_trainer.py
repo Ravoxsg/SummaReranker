@@ -106,7 +106,7 @@ no_repeat_ngram_sizes_bart = [0, 3, 3]
 highlights = [True, False, False]
 clean_ns = [True, False, False]
 
-idx = dataset_names.index(args.dataset_name)
+idx = dataset_names.index(args.dataset)
 args.data_folder = "../../data/{}".format(args.dataset)
 args.max_length = max_lengths[idx]
 args.train_size = train_sizes[idx]
