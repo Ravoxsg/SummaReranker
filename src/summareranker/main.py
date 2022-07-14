@@ -132,8 +132,8 @@ pegasus_model_names = [
 bart_model_names = [
     "bart_cnndm", "bart_xsum", "bart_reddit"
 ]
-max_lengths = [384, 448, 384]
-max_summary_lengths = [128, 64, 128]
+max_lengths = [384, 448, 448]
+max_summary_lengths = [128, 64, 64]
 eval_every = [500, 500, 100]
 clean_ns = [True, False, False]
 
@@ -141,14 +141,8 @@ idx = dataset_names.index(args.dataset)
 
 args.highlights = highlights[idx]
 args.train_sizes = train_sizes[idx]
-if args.val_dataset == "small_val":
-    args.val_size = 300
-else:
-    args.val_size = val_sizes[idx]
-if args.test_dataset == "small_val":
-    args.test_size = 300
-else:
-    args.test_size = test_sizes[idx]
+args.val_size = val_sizes[idx]
+args.test_size = test_sizes[idx]
 if args.base_model_type == "pegasus":
     args.train_model_names = pegasus_train_model_names[idx]
     args.model_name = pegasus_model_names[idx]

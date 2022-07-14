@@ -30,8 +30,7 @@ parser.add_argument('--dataset', type=str, default = "reddit",
 parser.add_argument('--generation_methods_str', type=str, default = "diverse_beam_search")
 parser.add_argument('--scoring_methods_str', type=str, default = "rouge_1+rouge_2+rouge_l")
 parser.add_argument('--sep_symbol', type=str, default = "[SEP]")
-parser.add_argument('--val_dataset', type=str, default = "small_val",
-                    choices = ["small_val", "val", "test"])
+parser.add_argument('--val_dataset', type=str, default = "val", choices = ["val", "test"])
 parser.add_argument('--max_val_size', type=int, default = 300)
 
 # base model
@@ -86,9 +85,7 @@ clean_ns = [True, False, False]
 idx = dataset_names.index(args.dataset)
 
 args.highlights = highlights[idx]
-if args.val_dataset == "small_val":
-    args.val_size = 300
-elif args.val_dataset == "val":
+if args.val_dataset == "val":
     args.val_size = val_sizes[idx]
 elif args.val_dataset == "test":
     args.val_size = test_sizes[idx]
