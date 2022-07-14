@@ -49,10 +49,7 @@ def main(args):
     with open(args.data_folder + "train_text.txt", "rb") as f:
         for l in f.readlines():
             train_texts.append(l)
-    with open(args.data_folder + "train_top_sentences.txt", "rb") as f:
-        for l in f.readlines():
-            train_top_sents.append(l)
-    print(len(train_summaries), len(train_texts), len(train_top_sents)) 
+    print(len(train_summaries), len(train_texts))
 
     # shuffle
     p = np.random.permutation(len(train_texts))
@@ -79,9 +76,6 @@ def main(args):
     with open(args.data_folder + "first_half_train_shuffled_text.txt", "wb") as f:
         for l in first_half_texts:
             f.write(l)
-    with open(args.data_folder + "first_half_train_shuffled_top_sentences.txt", "wb") as f:
-        for l in first_half_top_sents:
-            f.write(l)
 
     # 2nd half - full files
     second_half_summaries = train_summaries[args.thresh:]
@@ -94,10 +88,7 @@ def main(args):
     with open(args.data_folder + "second_half_train_shuffled_text.txt", "wb") as f:
         for l in second_half_texts:
             f.write(l)
-    with open(args.data_folder + "second_half_train_shuffled_top_sentences.txt", "wb") as f:
-        for l in second_half_top_sents:
-            f.write(l)
-
+            
     # individual files
     if args.individual_files:
         docs = ["summary", "text"]
