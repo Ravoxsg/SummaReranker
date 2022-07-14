@@ -109,7 +109,7 @@ clean_ns = [True, False, False]
 
 idx = dataset_names.index(args.dataset_name)
 args.dataset = datasets[idx]
-args.data_folder = "/data/mathieu/DATASETS/{}/data/".format(args.dataset)
+args.data_folder = "../../data/{}".format(args.dataset)
 args.max_length = max_lengths[idx]
 args.train_size = train_sizes[idx]
 args.val_size = val_sizes[idx]
