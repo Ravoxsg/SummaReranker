@@ -49,9 +49,9 @@ Generating summary candidates should take a few hours on the validation or test 
 Note that for Reddit, you need to fine-tune the model on your training split prior to generating candidates.
 
 ### 2 - Score the candidates
-To evaluate SummaReranker, we need to score each summary candidate with all the metrics of interest (ROUGE, BERTScore, BARTScore, etc).  
+To evaluate SummaReranker, we need to score each summary candidate with all the metrics of interest (ROUGE-1/2/L, BERTScore, BARTScore, etc).  
 
-For instance to score PEGASUS diverse beam search candidates on Reddit validation set with ROUGE-L:
+For instance to score PEGASUS diverse beam search candidates on Reddit validation set with ROUGE-1:
 ```
 CUDA_VISIBLE_DEVICES=0 bash scores.sh
 ```
