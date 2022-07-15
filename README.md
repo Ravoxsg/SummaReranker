@@ -20,7 +20,7 @@ conda activate summa_reranker
 pip install -r requirements.txt
 ```
 
-## Download the dataset
+## Dataset
 
 We use HuggingFace datasets library to access and save each dataset.
 We save it as .txt file for the sources, and another one for the summaries, with 1 data point per line.
