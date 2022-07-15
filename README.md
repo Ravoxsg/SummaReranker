@@ -39,6 +39,7 @@ Note that for Reddit, we make a custom 80/10/10 train/val/test split.
 ### 1 - Generate summary candidates
 SummaReranker takes as input a set of summary candidates from a given sequence-to-sequence model (PEGASUS, BART) and a given decoding method
 (beam search, diverse beam search, top-p sampling, top-k sampling).  
+
 For instance with PEGASUS on Reddit validation set, and with diverse beam search:
 ```
 CUDA_VISIBLE_DEVICES=0 bash candidate_generation.sh
@@ -49,11 +50,12 @@ Note that for Reddit, you need to fine-tune the model on your training split pri
 
 ### 2 - Score the candidates
 To evaluate SummaReranker, we need to score each summary candidate with all the metrics of interest (ROUGE, BERTScore, BARTScore, etc).  
+
 For instance to score PEGASUS diverse beam search candidates on Reddit validation set with ROUGE-L:
 ```
 CUDA_VISIBLE_DEVICES=0 bash scores.sh
 ```
-Scoring all candidates should take a few minutes with ROUGE metrics on the test set of CNN/DM, XSum or Reddit. 
+Scoring all candidates should take a few minutes with ROUGE metrics on the validation or test sets of CNN/DM, XSum or Reddit. 
 
 ### 3 - Download the model checkpoint
 CNN/DM checkpoint (trained on beam search + diverse beam search candidates, for ROUGE-1/2/L metrics): <a href="https://drive.google.com/file/d/1aHX6Piehyp2hV59le-ccsmR56pUbOttx/view?usp=sharing" style = "text-decoration:none;color:#4682B4">here</a>  
