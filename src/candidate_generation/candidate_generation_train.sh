@@ -14,7 +14,6 @@ python main_candidate_generation.py \
 --num_return_sequences 15 \
 --num_beams 15 \
 --num_beam_groups 15 \
---max_val_size 10 \
 
 # Model trained on 2nd training half => infer on 1st training half
 python main_candidate_generation.py \
@@ -32,7 +31,6 @@ python main_candidate_generation.py \
 --num_return_sequences 15 \
 --num_beams 15 \
 --num_beam_groups 15 \
---max_val_size 10 \
 
 # Model trained on entire training set => infer on validation set
 python main_candidate_generation.py \
@@ -50,7 +48,6 @@ python main_candidate_generation.py \
 --num_return_sequences 15 \
 --num_beams 15 \
 --num_beam_groups 15 \
---max_val_size 10 \
 
 # Model trained on entire training set => infer on test set
 python main_candidate_generation.py \
@@ -68,4 +65,3 @@ python main_candidate_generation.py \
 --num_return_sequences 15 \
 --num_beams 15 \
 --num_beam_groups 15 \
---max_val_size 10 \

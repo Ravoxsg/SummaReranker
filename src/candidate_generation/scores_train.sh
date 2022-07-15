@@ -8,7 +8,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_1 \
 --save_scores True \
---val_size 10 \
 
 python main_scores.py \
 --dataset reddit \
@@ -18,7 +17,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_2 \
 --save_scores True \
---val_size 10 \
 
 python main_scores.py \
 --dataset reddit \
@@ -28,7 +26,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_l \
 --save_scores True \
---val_size 10 \
 
 # ROUGE-1/2/L scoring on the 2nd half of the training set
 
@@ -40,7 +37,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_1 \
 --save_scores True \
---val_size 10 \
 
 python main_scores.py \
 --dataset reddit \
@@ -50,7 +46,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_2 \
 --save_scores True \
---val_size 10 \
 
 python main_scores.py \
 --dataset reddit \
@@ -60,7 +55,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_l \
 --save_scores True \
---val_size 10 \
 
 # ROUGE-1/2/L scoring on the validation set
 
@@ -72,7 +66,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_1 \
 --save_scores True \
---val_size 10 \
 
 python main_scores.py \
 --dataset reddit \
@@ -82,7 +75,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_2 \
 --save_scores True \
---val_size 10 \
 
 python main_scores.py \
 --dataset reddit \
@@ -92,7 +84,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_l \
 --save_scores True \
---val_size 10 \
 
 # ROUGE-1/2/L scoring on the test set
 
@@ -104,7 +95,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_1 \
 --save_scores True \
---val_size 10 \
 
 python main_scores.py \
 --dataset reddit \
@@ -114,7 +104,6 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_2 \
 --save_scores True \
---val_size 10 \
 
 python main_scores.py \
 --dataset reddit \
@@ -124,4 +113,3 @@ python main_scores.py \
 --num_candidates 15 \
 --label_metric rouge_l \
 --save_scores True \
---val_size 10 \

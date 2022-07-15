@@ -119,9 +119,9 @@ args.n_tasks = len(args.scoring_methods)
 
 dataset_names = ["cnndm", "xsum", "reddit"]
 highlights = [True, False, False]
-train_sizes = [[143000, 144113], [102000, 102045], [10, 10]]
-val_sizes = [13368, 11332, 10]
-test_sizes = [11490, 11334, 10]
+train_sizes = [[143000, 144113], [102000, 102045], [17000, 16704]]
+val_sizes = [13368, 11332, 4213]
+test_sizes = [11490, 11334, 4222]
 
 pegasus_train_model_names = [
     ["pegasus_cnndm_second_half_shuffled_1", "pegasus_cnndm_first_half_shuffled_1"],

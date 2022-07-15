@@ -124,7 +124,7 @@ if args.model_type == "pegasus":
     args.train_bs = 2
     args.scheduler = "constant"
     args.warmup_ratio = 0
-    args.gradient_accumulation_steps = 1 # 128
+    args.gradient_accumulation_steps = 128
     if args.eval_every < 0:
         args.eval_every = eval_every_pegasus[idx]
 elif args.model_type == "bart":
