@@ -75,6 +75,7 @@ Make sure that the argument --load_model_path points to where you placed the Sum
 ### 1 - Fine-tune base models
 
 For training, SummaReranker follows a cross-validation approach: the training set is split in two, and we train one model on each half, to then infer it and use its predictions on the other half. We also need a third model trained on the entire training set (for the transfer setup at inference time), which we re-train ourselves for Reddit. 
+
 For instance with PEGASUS on Reddit:
 ```
 cd ../base_model_finetuning/
@@ -84,6 +85,7 @@ Note that this single script performs all the tasks of splitting the training se
 
 ### 2 - Generate summary candidates
 Then, we need to get summary candidates on the training, validation and test sets. 
+
 For instance with PEGASUS on Reddit with diverse beam search:
 ```
 cd ../candidate_generation/
@@ -93,6 +95,7 @@ Generating summary candidates on the entire datasets should take *up to a few da
 
 ### 3 - Score the candidates
 Next, we need to score the summary candidates on the training, validation and test sets for each of the metrics.
+
 For instance to score PEGASUS diverse beam search candidates on Reddit with ROUGE-1/2/L:
 ```
 CUDA_VISIBLE_DEVICES=0 bash scores_train.sh
