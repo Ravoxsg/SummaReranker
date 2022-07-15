@@ -60,7 +60,7 @@ XSum checkpoint (trained on beam search + diverse beam search candidates, for RO
 Reddit checkpoint (trained on beam search + diverse beam search candidates, for ROUGE-1/2/L metrics): <a href="https://drive.google.com/file/d/11aXfXtVNGOpawNUHBqSp-gaot9-NexGG/view?usp=sharing" style = "text-decoration:none;color:#4682B4">here</a>  
 
 ### 4 - Run SummaReranker
-For instance, to run SummaReranker trained for ROUGE-1/2/L on PEGASUS beam search candidates on 300 validation samples on Reddit:
+For instance, to run SummaReranker trained for ROUGE-1/2/L on PEGASUS (beam search + diverse beam search candidates) on Reddit validation set:
 ```
 cd ../summareranker/
 CUDA_VISIBLE_DEVICES=0 bash evaluate.sh
@@ -71,32 +71,37 @@ Make sure that the argument --load_model_path points to where you placed the Sum
 
 ### 1 - Fine-tune base models
 
-For instance with PEGASUS on Reddit with diverse beam search:
+For training, SummaReranker follows a cross-validation approach: the training set is split in two, and we train one model on each half, to then infer it and use its predictions on the other half. We also need a third model trained on the entire training set (for the transfer setup at inference time), which we re-train ourselves for Reddit. 
+For instance with PEGASUS on Reddit:
 ```
-CUDA_VISIBLE_DEVICES=0 bash candidate_generation_train.sh
+cd ../base_model_finetuning/
+CUDA_VISIBLE_DEVICES=0 bash train_base_models.sh
 ```
+Note that this single script performs all the tasks of splitting the training set, then training models and on each half, and training a model on the entire set.
 
 ### 2 - Generate summary candidates
+Then, we need to get summary candidates on the training, validation and test sets. 
 For instance with PEGASUS on Reddit with diverse beam search:
 ```
+cd ../candidate_generation/
 CUDA_VISIBLE_DEVICES=0 bash candidate_generation_train.sh
 ```
+Generating summary candidates on the entire datasets should take *up to a few days*.
 
 ### 3 - Score the candidates
-To evaluate SummaReranker, we need to score each summary candidate with all the metrics of interest (ROUGE, BERTScore, BARTScore, etc).  
-For instance to score PEGASUS diverse beam search candidates on Reddit validation set with ROUGE-L:
+Next, we need to score the summary candidates on the training, validation and test sets for each of the metrics.
+For instance to score PEGASUS diverse beam search candidates on Reddit with ROUGE-1/2/L:
 ```
-CUDA_VISIBLE_DEVICES=0 bash scores.sh
+CUDA_VISIBLE_DEVICES=0 bash scores_train.sh
 ```
-Scoring all candidates should take a few minutes with ROUGE metrics on the test set of CNN/DM, XSum or Reddit. 
+Scoring all candidates should take a few minutes with ROUGE metrics. 
 
-### 4 - Run SummaReranker
-For instance, to run SummaReranker trained for ROUGE-1/2/L on PEGASUS beam search candidates on 300 validation samples on Reddit:
+### 4 - Train SummaReranker
+For instance, to train SummaReranker trained for ROUGE-1/2/L on PEGASUS diverse beam search candidates on Reddit:
 ```
 cd ../summareranker/
-CUDA_VISIBLE_DEVICES=0 bash evaluate.sh
+CUDA_VISIBLE_DEVICES=0 bash train.sh
 ```
-Make sure that the argument --load_model_path points to where you placed the SummaReranker checkpoint. 
 
 ## Citation
 If you find our paper or this project helps your research, please kindly consider citing our paper in your publication.   
