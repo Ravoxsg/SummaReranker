@@ -24,7 +24,7 @@ pip install -r requirements.txt
 
 We use HuggingFace datasets library to access and save each dataset.
 We save it as .txt file for the sources, and another one for the summaries, with 1 data point per line.
-For CNN/DM, we save one .txt file for every single data point 
+For CNN/DM, we save one .txt file for every single data point.
 For instance to download and save Reddit:
 ```
 cd src/candidate_generation/
