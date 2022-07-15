@@ -74,6 +74,7 @@ Make sure that the argument --load_model_path points to where you placed the Sum
 For instance with PEGASUS on Reddit with diverse beam search:
 ```
 CUDA_VISIBLE_DEVICES=0 bash candidate_generation_train.sh
+```
 
 ### 2 - Generate summary candidates
 For instance with PEGASUS on Reddit with diverse beam search:
