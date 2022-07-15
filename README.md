@@ -43,7 +43,7 @@ For instance with PEGASUS on Reddit validation set, and with diverse beam search
 ```
 CUDA_VISIBLE_DEVICES=0 bash candidate_generation.sh
 ```
-Generating summary candidates should take a few hours on the test set of CNN/DM, XSum or Reddit.
+Generating summary candidates should take a few hours on the validation or test sets of CNN/DM, XSum or Reddit.
 
 Note that for Reddit, you need to fine-tune the model on your training split prior to generating candidates.
 
