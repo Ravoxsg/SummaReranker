@@ -77,6 +77,7 @@ parser.add_argument('--evaluation_strategy', type=str, default = "steps")
 parser.add_argument('--evaluation_method', type=str, default = "generation",
                     choices=["generation", "loss"])
 parser.add_argument('--eval_test', type=bool, default = False)
+parser.add_argument('--eval_every', type=int, default=-1)
 
 # summaries
 parser.add_argument('--generate_summaries', type=bool, default = False)
@@ -123,8 +124,9 @@ if args.model_type == "pegasus":
     args.train_bs = 2
     args.scheduler = "constant"
     args.warmup_ratio = 0
-    args.gradient_accumulation_steps = 128 # 128
-    args.eval_every = eval_every_pegasus[idx]
+    args.gradient_accumulation_steps = 1 # 128
+    if args.eval_every < 0:
+        args.eval_every = eval_every_pegasus[idx]
 elif args.model_type == "bart":
     args.fp16 = True
     args.adafactor = False
@@ -133,7 +135,8 @@ elif args.model_type == "bart":
     args.scheduler = "linear"
     args.warmup_ratio = 0.025
     args.gradient_accumulation_steps = 20
-    args.eval_every = eval_every_bart[idx]
+    if args.eval_every < 0:
+        args.eval_every = eval_every_bart[idx]
 args.max_summary_length = max_summary_lengths[idx]
 # summary generation
 if args.model_type == "pegasus":

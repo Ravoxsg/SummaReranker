@@ -12,10 +12,7 @@ def get_summaries(tokenizer, val_loader, model, device, args):
     val_texts = []
     val_summaries = []
     val_labels = []
-    base_model = model
-
-    if args.ft_model:
-        base_model = model.pretrained_model
+    base_model = model.pretrained_model
 
     for idx, batch in tqdm(enumerate(val_loader)):
         for k in batch["text_inputs"].keys():

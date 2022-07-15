@@ -1,5 +1,7 @@
 data/*
 summaries/*
 scored_summaries/*
+src/base_model_finetuning/ft_saved_models/*
+src/summareranker/saved_models/*
 src/common/__pycache__/*
 src/common/summareranker/__pycache__/*

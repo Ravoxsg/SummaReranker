@@ -28,15 +28,20 @@ parser.add_argument('--seed', type = int, default = 42)
 parser.add_argument('--dataset', type=str, default = "reddit", 
                     choices= ["cnndm", "xsum", "reddit"])
 parser.add_argument('--val_dataset', type = str, default = "val",
-                    choices = ["val", "test"])
+                    choices = ["train", "first_half_train_shuffled", "second_half_train_shuffled", "val", "test"])
 parser.add_argument('--generation_method', type = str, default = "diverse_beam_search",
                     choices = ["beam_search", "diverse_beam_search", "top_p_sampling", "top_k_sampling"])
 parser.add_argument('--val_size', type = int, default = -1)
 
 # model
 parser.add_argument('--model_name', type = str, default = "pegasus_unsupervised",
-                    choices = ["pegasus_unsupervised", "pegasus_cnndm", "bart_cnndm",
-                    "pegasus_xsum", "bart_xsum", "pegasus_reddit_train_1", "bart_reddit"])
+                    choices = ["pegasus_unsupervised", "bart_unsupervised",
+                    "pegasus_cnndm_first_half_shuffled_1", "pegasus_cnndm_second_half_shuffled_1", "pegasus_cnndm", 
+                    "bart_cnndm_first_half_shuffled_1", "bart_cnndm_second_half_shuffled_1", "bart_cnndm",
+                    "pegasus_xsum_first_half_shuffled_1", "pegasus_xsum_second_half_shuffled_1", "pegasus_xsum", 
+                    "bart_xsum_first_half_shuffled_1", "bart_xsum_second_half_shuffled_1", "bart_xsum", 
+                    "pegasus_reddit_first_half_shuffled_1", "pegasus_reddit_second_half_shuffled_1", "pegasus_reddit_train_1", 
+                    "bart_reddit_first_half_shuffled_1", "bart_reddit_second_half_shuffled_1", "bart_reddit"])
 parser.add_argument('--num_candidates', type = int, default = 15)
 
 # METRIC

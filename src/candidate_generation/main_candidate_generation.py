@@ -50,7 +50,7 @@ parser.add_argument('--load_model_path', type = str,
 
 # summary generation
 parser.add_argument('--val_dataset', type=str, default = "val",
-                    choices = ["val", "test"])
+                    choices = ["train", "first_half_train_shuffled", "second_half_train_shuffled", "val", "test"])
 parser.add_argument('--max_val_size', type = int, default = 100000)
 parser.add_argument('--inference_bs', type = int, default = 2) 
 parser.add_argument('--save_summaries', type = bool, default = True)

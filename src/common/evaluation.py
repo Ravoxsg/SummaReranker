@@ -34,15 +34,7 @@ def overall_eval(val_texts, val_summaries, val_labels, args):
     # Abstractiveness
     if args.eval_new_ngram:
         new_ngram_eval(val_texts, val_summaries, args)
-    # Overlap with source
-    if args.eval_rouge_source:
-        r1_text, r2_text, rl_text = rouge_eval("source", val_summaries, val_texts, val_texts, args)
-        if args.check_correlation:
-            r1_p = pearsonr(r1_true, r1_text)[0]
-            r2_p = pearsonr(r2_true, r2_text)[0]
-            rl_p = pearsonr(rl_true, rl_text)[0]
-            print("Pearson correlations between ROUGE w true labels and ROUGE w source: {:.4f} / {:.4f} / {:.4f}".format(r1_p, r2_p, rl_p))
-
+     
     return all_scores, all_score_names
 
 

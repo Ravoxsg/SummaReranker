@@ -33,4 +33,4 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 main_tr
 --n_epochs 1 \
 --max_train_size 10 \
 --max_val_size 10 \
---eval_every 10 \
+--eval_every 5 \
