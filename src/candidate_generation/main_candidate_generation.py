@@ -33,7 +33,7 @@ parser.add_argument('--model_type', type = str, default = "pegasus",
 parser.add_argument('--model', type = str, default = "google/pegasus-large",
                     choices = ["google/pegasus-large", "google/pegasus-cnn_dailymail", "google/pegasus-xsum",
                     "facebook/bart-large", "facebook/bart-large-cnn", "facebook/bart-large-xsum"])
-parser.add_argument('--model_name', type=str, default = "pegasus_unsupervised",
+parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1",
                     choices = ["pegasus_unsupervised", "bart_unsupervised",
                     "pegasus_cnndm_first_half_shuffled_1", "pegasus_cnndm_second_half_shuffled_1", "pegasus_cnndm",
                     "bart_cnndm_first_half_shuffled_1", "bart_cnndm_second_half_shuffled_1", "bart_cnndm",
@@ -47,13 +47,13 @@ parser.add_argument('--cache_dir', type = str,
 parser.add_argument('--load_model', type = bool, default = False)
 parser.add_argument('--load_model_path', type = str,
                     default = "../base_model_finetuning/ft_saved_models/reddit/pegasus_reddit_train_1/checkpoint-5/pytorch_model.bin") # todo: change to where you saved the finetuned checkpoint
-parser.add_argument('--ft_model', type = bool, default = True)
 
 # summary generation
 parser.add_argument('--val_dataset', type=str, default = "val",
                     choices = ["val", "test"])
+parser.add_argument('--max_val_size', type = int, default = 100000)
 parser.add_argument('--inference_bs', type = int, default = 2) 
-parser.add_argument('--save_summaries', type = bool, default = False)
+parser.add_argument('--save_summaries', type = bool, default = True)
 parser.add_argument('--generation_method', type = str, default = "diverse_beam_search",
                     choices = ["beam_search", "diverse_beam_search", "top_p_sampling", "top_k_sampling"])
 parser.add_argument('--num_return_sequences', type = int, default = 15) # default: 15
@@ -88,10 +88,6 @@ no_repeat_ngram_sizes = [0, 3, 3]
 idx = dataset_names.index(args.dataset)
 
 args.highlights = highlights[idx]
-if args.val_dataset == "val":
-    args.val_dataset_size = val_data_sizes[idx]
-elif args.val_dataset == "test":
-    args.val_dataset_size = test_data_sizes[idx]
 args.max_length = max_lengths[idx]
 args.max_summary_length = max_summary_lengths[idx]
 args.clean_n = clean_ns[idx]
@@ -137,8 +133,8 @@ def main(args):
     mode = "val"
     texts, summaries = val_data
     print(len(texts), len(summaries))
-    texts = texts[:args.val_dataset_size]
-    summaries = summaries[:args.val_dataset_size]
+    texts = texts[:args.max_val_size]
+    summaries = summaries[:args.max_val_size]
     print(len(texts), len(summaries))
     if args.debug:
         texts = texts[:args.debug_size]
@@ -151,8 +147,7 @@ def main(args):
 
     # model
     model = build_model(args)
-    if args.ft_model:
-        model = FTModel(model, args)
+    model = FTModel(model, args)
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print("\nThe model has {} trainable parameters".format(n_params))
     model = model.to(device)

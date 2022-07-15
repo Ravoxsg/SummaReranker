@@ -31,6 +31,7 @@ parser.add_argument('--val_dataset', type = str, default = "val",
                     choices = ["val", "test"])
 parser.add_argument('--generation_method', type = str, default = "diverse_beam_search",
                     choices = ["beam_search", "diverse_beam_search", "top_p_sampling", "top_k_sampling"])
+parser.add_argument('--val_size', type = int, default = -1)
 
 # model
 parser.add_argument('--model_name', type = str, default = "pegasus_unsupervised",
@@ -68,10 +69,11 @@ clean_ns = [True, False, False]
 idx = dataset_names.index(args.dataset)
 
 args.highlights = highlights[idx]
-if args.val_dataset == "val":
-    args.val_dataset_size = val_data_sizes[idx]
-elif args.val_dataset == "test":
-    args.val_dataset_size = test_data_sizes[idx]
+if args.val_size < 0:
+    if args.val_dataset == "val":
+        args.val_size = val_data_sizes[idx]
+    elif args.val_dataset == "test":
+        args.val_size = test_data_sizes[idx]
 args.test_data_size = test_data_sizes[idx]
 args.clean_n = clean_ns[idx]
 
@@ -98,12 +100,12 @@ def main(args):
     # path
     path = "../../summaries/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method)
     # load summaries
-    summaries_path = path + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
+    summaries_path = path + "{}_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, args.val_size, args.num_candidates)
     with open(summaries_path, "rb") as f:
         summaries = pickle.load(f)
     print("Loaded {} summaries".format(len(summaries)))
     # load labels
-    labels_path = path + "{}_labels_{}_beams_{}.pkl".format(args.val_dataset, args.val_dataset_size, args.num_candidates)
+    labels_path = path + "{}_labels_{}_beams_{}.pkl".format(args.val_dataset, args.val_size, args.num_candidates)
     with open(labels_path, "rb") as f:
         labels = pickle.load(f)
     print("Loaded {} labels".format(len(labels)))
@@ -183,7 +185,7 @@ def main(args):
 
     if args.save_scores:
         new_path = "../../scored_summaries/{}/{}/{}/{}/".format(args.dataset, args.val_dataset, args.generation_method, args.label_metric)
-        save_path = new_path + "{}_scored_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, args.val_dataset_size, args.num_candidates)
+        save_path = new_path + "{}_scored_summaries_{}_{}_beams_{}.pkl".format(args.val_dataset, args.model_name, args.val_size, args.num_candidates)
         with open(save_path, "wb") as f:
             pickle.dump(scored_summaries, f)
             print("saved new data!", save_path)

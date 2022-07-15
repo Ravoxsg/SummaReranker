@@ -5,7 +5,6 @@ python main_candidate_generation.py \
 --model_name pegasus_unsupervised \
 --cache_dir ../../../hf_models/pegasus-large \
 --load_model False \
---ft_model True \
 --val_dataset val \
 --inference_bs 2 \
 --save_summaries True \

@@ -2,4 +2,4 @@ candidate_generation/dataset.sh
 base_model_finetuning/train_base_models.sh
 candidate_generation/candidate_generation.sh (3 models, several datasets)
 candidate_generation/scores.sh (3 models, several datasets, several metrics)
-summareranker/train.sh (3 models, several datasets, several metrics)
+summareranker/train.sh

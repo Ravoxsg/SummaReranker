@@ -71,7 +71,6 @@ def read_one_file(set, file, args):
     with open(file, 'r') as f:
         for l in tqdm(f.readlines()):
             lines.append(l)
-    lines = lines[:args.val_dataset_size]
     print(file, len(lines))
 
     return lines

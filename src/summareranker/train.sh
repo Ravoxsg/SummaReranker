@@ -14,3 +14,6 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=2000 main.py
 --lr 1e-5 \
 --save_model True \
 --save_model_path saved_models/reddit/model_1 \
+--max_train_size 10 \
+--max_val_size 10 \
+--max_test_size 10 \
