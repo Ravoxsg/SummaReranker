@@ -83,9 +83,9 @@ CUDA_VISIBLE_DEVICES=0 bash train_base_models.sh
 ```
 Note that this single script performs all the tasks of splitting the training set, then training models and on each half, and training a model on the entire set.
 
-For models trained on the entire training set of CNN/DM and XSum, I used the public HuggingFace checkpoints:  
-CNN/DM: https://huggingface.co/google/pegasus-cnn_dailymail
-XSum: https://huggingface.co/google/pegasus-xsum  
+For models trained on the entire training set of CNN/DM and XSum, I used the public HuggingFace checkpoints:   
+CNN/DM: https://huggingface.co/google/pegasus-cnn_dailymail  
+XSum: https://huggingface.co/google/pegasus-xsum   
 Here's a link to download the PEGASUS-large fine-tuned on 100% of my training set of Reddit: <a href="https://drive.google.com/file/d/1jS1WmcRm-ouofNf9QDbsCXaaBxHXwTC_/view?usp=sharing" style = "text-decoration:none;color:#4682B4">here</a>  
 
 ### 2 - Generate summary candidates
