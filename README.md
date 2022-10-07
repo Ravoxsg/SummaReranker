@@ -34,6 +34,14 @@ bash dataset.sh
 
 Note that for Reddit, we make a custom 80/10/10 train/val/test split.
 
+To match our results on Reddit, the double check that you have the following:
+For training set, size is 33,704 and the first data point summary is:  
+*got a toy train from first grade. used an old hot wheels ramp to fling it into the air and smash my ceiling fan globe.** *
+For the validation set, size is 4,213 and the first label is:  
+*married a redditor.  created a reddit account.  lost many hours to reddit.*
+For the test set, size is 4,222 and the first label is:  
+*laughed at baby boner...it turned into a super soaker.*
+
 ## EVALUATION pipeline (assumes an already trained SummaReranker checkpoint)
 
 ### 1 - Generate summary candidates
