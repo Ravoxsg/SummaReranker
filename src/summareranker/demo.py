@@ -6,7 +6,7 @@ import numpy as np
 import torch
 import argparse
 from datasets import load_dataset
-from transformers import PegasusTokenizerFast, PegasusForConditionalGeneration, RobertaTokenizerFast, RobertaModel
+from transformers import PegasusTokenizer, PegasusTokenizerFast, PegasusForConditionalGeneration, RobertaTokenizerFast, RobertaModel
 
 from common.utils import seed_everything
 from model import ModelMultitaskBinary
@@ -14,10 +14,12 @@ from model import ModelMultitaskBinary
 
 parser = argparse.ArgumentParser()
 args = parser.parse_args()
-args.device = torch.device("cuda")
+args.device = torch.device("cpu")
 args.generation_methods = ["diverse_beam_search"]
 args.num_beams = 15
 args.scoring_methods = ["rouge_1", "rouge_2", "rouge_l"]
+args.filter_out_duplicates = True
+args.sep_symbol = "[SEP]"
 args.n_tasks = 3
 args.hidden_size = 1024
 args.use_shared_bottom = True
@@ -28,6 +30,7 @@ args.expert_hidden_size = 1024
 args.tower_hidden_size = 1024
 args.sharp_pos = False
 args.use_aux_loss = False
+args.max_length = 512
 args.max_source_length = 384
 args.max_summary_length = 128
 
@@ -36,9 +39,10 @@ seed_everything(42)
 
 # data
 dataset_name = "ccdv/cnn_dailymail"
+version = "3.0.0"
 subset = "test"
 text_key = "article"
-dataset = load_dataset(dataset_name, cache_dir="/data/mathieu/hf_datasets/")
+dataset = load_dataset(dataset_name, version, cache_dir="/data/mathieu/hf_datasets/")
 dataset = dataset[subset]
 texts = dataset[text_key]
 p = np.random.permutation(len(texts))
@@ -49,8 +53,8 @@ print("\nSource document:")
 print(text)
 
 # base model
-base_model_name = "google/pegasus-cnndm"
-base_tokenizer = PegasusTokenizerFast.from_pretrained(base_model_name, cache_dir="/data/mathieu/hf_models/pegasus-large-cnndm/")
+base_model_name = "google/pegasus-cnn_dailymail"
+base_tokenizer = PegasusTokenizer.from_pretrained(base_model_name, cache_dir="/data/mathieu/hf_models/pegasus-large-cnndm/")
 base_model = PegasusForConditionalGeneration.from_pretrained(base_model_name, cache_dir="/data/mathieu/hf_models/pegasus-large-cnndm/")
 base_model = base_model.cuda()
 
@@ -73,38 +77,42 @@ candidates = base_tokenizer.batch_decode(generated, skip_special_tokens=True)
 print("\nSummary candidates:")
 for j in range(len(candidates)):
     print("Candidate {}:".format(j))
-    print(candidates[j])
+    print(candidates[j].replace("<n>", " ").replace("\n", " "))
+
+del base_model
 
 # SummaReranker
 # model
 model_name = "roberta-large"
 tokenizer = RobertaTokenizerFast.from_pretrained(model_name, cache_dir="/data/mathieu/hf_models/roberta-large/")
 model = RobertaModel.from_pretrained(model_name, cache_dir="/data/mathieu/hf_models/roberta-large/")
-model = model.cuda()
+model = model.to(args.device)
 summareranker_model = ModelMultitaskBinary(model, tokenizer, args)
-summareranker_model = summareranker_model.cuda()
+summareranker_model = summareranker_model.to(args.device)
 summareranker_model_path = "/data/mathieu/2nd_stage_summarization/4_supervised_multitask_reranking/saved_models/cnndm/multitask_3_tasks_ablation_8/checkpoint-12500/pytorch_model.bin"
 summareranker_model.load_state_dict(torch.load(summareranker_model_path))
 # prepare the data
-text_inputs = self.tokenizer(text, return_tensors="pt", max_length=self.args.max_source_length, padding='max_length')
-text_inputs["input_ids"] = text_inputs["input_ids"][:, :self.args.max_source_length]
-text_inputs["attention_mask"] = text_inputs["attention_mask"][:, :self.args.max_source_length]
+text_inputs = tokenizer(text, return_tensors="pt", max_length=args.max_source_length, padding='max_length')
+text_inputs["input_ids"] = text_inputs["input_ids"][:, :args.max_source_length]
 text_and_candidates_ids, text_and_candidates_masks = [], []
 for j in range(len(candidates)):
     candidate = candidates[j]
-    candidate_inputs = self.tokenizer(candidate, return_tensors="pt", max_length=self.args.max_summary_length, padding='max_length')
-    candidate_inputs["input_ids"] = candidate_inputs["input_ids"][:, :self.args.max_summary_length]
-    candidate_inputs["attention_mask"] = candidate_inputs["attention_mask"][:, :self.args.max_summary_length]
-    ids = torch.cat((text_inputs["input_ids"], candidate_inputs["input_ids"]), 1)
-    mask = torch.cat((text_inputs["attention_mask"], candidate_inputs["attention_mask"]), 1)
+    candidate_inputs = tokenizer(candidate, return_tensors="pt", max_length=args.max_summary_length, padding='max_length')
+    candidate_inputs["input_ids"] = candidate_inputs["input_ids"][:, :args.max_summary_length]
+    block = tokenizer.batch_decode(text_inputs["input_ids"], skip_special_tokens = True)[0] + args.sep_symbol + tokenizer.batch_decode(candidate_inputs["input_ids"], skip_special_tokens = True)[0]
+    text_and_candidate = tokenizer(block, return_tensors="pt", padding="max_length", max_length=args.max_length)
+    ids = text_and_candidate["input_ids"][:, :args.max_length]
+    mask = text_and_candidate["attention_mask"][:, :args.max_length]
     text_and_candidates_ids.append(ids)
     text_and_candidates_masks.append(mask)
-text_and_candidates_ids = torch.cat(text_and_candidates_ids, 0)
-text_and_candidates_masks = torch.cat(text_and_candidates_masks, 0)
-print(ids.shape, masks.shape)
+text_and_candidates_ids = torch.cat(text_and_candidates_ids, 0).to(args.device)
+text_and_candidates_masks = torch.cat(text_and_candidates_masks, 0).to(args.device)
+print(text_and_candidates_ids.shape, text_and_candidates_masks.shape)
 # inference
-mode = "val"
-scores = torch.randn(len(text_and_candidates_ids), len(args.scoring_methods)) # create random candidate scores
-output = model(mode, text_and_candidates_ids, text_and_candidates_mask, scores)
-candidate_scores = output["overall_predictions"]
-print(candidate_scores)
+mode = torch.tensor([0]).to(args.device)
+scores = torch.randn(1, len(args.scoring_methods), len(candidates)).to(args.device) # create random candidate scores
+output = summareranker_model(mode, text_and_candidates_ids.unsqueeze(0), text_and_candidates_masks.unsqueeze(0), scores)
+candidate_scores = output["overall_predictions"][0]
+print("\nSummaReranker predicted scores:")
+for j in range(len(candidates)):
+    print("Candidate {} has score: {:.4f}".format(j, candidate_scores[j]))
