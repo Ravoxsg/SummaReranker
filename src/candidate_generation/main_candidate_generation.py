@@ -30,10 +30,10 @@ parser.add_argument('--dataset', type=str, default = "reddit",
 # model
 parser.add_argument('--model_type', type = str, default = "pegasus",
                     choices=["pegasus", "bart"])
-parser.add_argument('--model', type = str, default = "google/pegasus-large",
+parser.add_argument('--model', type = str, default = "google/pegasus-cnn_dailymail",
                     choices = ["google/pegasus-large", "google/pegasus-cnn_dailymail", "google/pegasus-xsum",
                     "facebook/bart-large", "facebook/bart-large-cnn", "facebook/bart-large-xsum"])
-parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1",
+parser.add_argument('--model_name', type=str, default = "pegasus_cnndm",
                     choices = ["pegasus_unsupervised", "bart_unsupervised",
                     "pegasus_cnndm_first_half_shuffled_1", "pegasus_cnndm_second_half_shuffled_1", "pegasus_cnndm",
                     "bart_cnndm_first_half_shuffled_1", "bart_cnndm_second_half_shuffled_1", "bart_cnndm",
@@ -43,18 +43,18 @@ parser.add_argument('--model_name', type=str, default = "pegasus_reddit_train_1"
                     "bart_reddit_first_half_shuffled_1", "bart_reddit_second_half_shuffled_1", "bart_reddit_train_1"])
 parser.add_argument('--hidden_size', type = int, default = 768) # 768 / 1024`
 parser.add_argument('--cache_dir', type = str,
-                    default = "../../../hf_models/pegasus-large/")
+                    default = "../../../hf_models/pegasus-large-cnndm/")
 parser.add_argument('--load_model', type = bool, default = False)
 parser.add_argument('--load_model_path', type = str,
                     default = "../base_model_finetuning/ft_saved_models/reddit/pegasus_reddit_train_1/checkpoint-5/pytorch_model.bin") # todo: change to where you saved the finetuned checkpoint
 
 # summary generation
-parser.add_argument('--val_dataset', type=str, default = "val",
+parser.add_argument('--val_dataset', type=str, default = "test",
                     choices = ["train", "first_half_train_shuffled", "second_half_train_shuffled", "val", "test"])
-parser.add_argument('--max_val_size', type = int, default = 100000)
+parser.add_argument('--max_val_size', type = int, default = 1000000)
 parser.add_argument('--inference_bs', type = int, default = 2) 
 parser.add_argument('--save_summaries', type = bool, default = True)
-parser.add_argument('--generation_method', type = str, default = "diverse_beam_search",
+parser.add_argument('--generation_method', type = str, default = "beam_search",
                     choices = ["beam_search", "diverse_beam_search", "top_p_sampling", "top_k_sampling"])
 parser.add_argument('--num_return_sequences', type = int, default = 15) # default: 15
 parser.add_argument('--num_beams', type = int, default = 15) # for beam search
@@ -77,7 +77,7 @@ dataset_names = ["cnndm", "xsum", "reddit"]
 highlights = [True, False, False]
 val_data_sizes = [13368, 11332, 4213]
 test_data_sizes = [11490, 11334, 4222]
-max_lengths = [384, 448, 384]
+max_lengths = [1024, 512, 512]
 max_summary_lengths = [128, 64, 128]
 clean_ns = [True, False, False]
 length_penalties_pegasus = [0.8, 0.8, 0.6]
@@ -132,10 +132,11 @@ def main(args):
     # datasets
     mode = "val"
     texts, summaries = val_data
-    print(len(texts), len(summaries))
+    print("Data size", len(texts), len(summaries))
+
     texts = texts[:args.max_val_size]
     summaries = summaries[:args.max_val_size]
-    print(len(texts), len(summaries))
+    print("Data size after truncation", len(texts), len(summaries))
     if args.debug:
         texts = texts[:args.debug_size]
         summaries = summaries[:args.debug_size]
@@ -163,6 +164,8 @@ def main(args):
     print("*"*100)
     print("\nTop beam:")
     overall_eval(val_texts, base_results, val_labels, args)
+
+    print(base_results[0])
 
     # export
     num_candidates = len(val_summaries[0])

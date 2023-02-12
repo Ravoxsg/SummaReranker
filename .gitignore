@@ -3,6 +3,7 @@
 data/*
 summaries/*
 scored_summaries/*
+src/.DS_STORE
 src/base_model_finetuning/ft_saved_models/*
 src/summareranker/saved_models/*
 src/common/__pycache__/*
