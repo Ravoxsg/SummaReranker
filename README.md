@@ -41,6 +41,13 @@ For the **validation** set, size is **4,213** and the first data point summary i
 For the **test** set, size is **4,222** and the first data point summary is:  
 *laughed at baby boner...it turned into a super soaker.*  
 
+## DEMO 
+If you just want a demo (in a single file) of SummaReranker on a single data point (default: CNN/DM), run:
+```
+cd src/summareranker/
+CUDA_VISIBLE_DEVICES=0 python demo.py
+```
+
 ## EVALUATION pipeline (assumes an already trained SummaReranker checkpoint)
 
 ### 1 - Generate summary candidates
