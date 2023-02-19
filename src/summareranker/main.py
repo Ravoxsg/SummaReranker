@@ -281,7 +281,6 @@ def main(args):
     # training loop
     if args.train:
         trainer.train()
-        model.display_training_labels()
     else:
         if args.load_model:
             model.load_state_dict(torch.load(args.load_model_path))

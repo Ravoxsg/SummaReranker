@@ -11,7 +11,6 @@ from model_moe import MoE, MLPTower, MLPExpert
 
 
 class ModelMultitaskBinary(nn.Module):
-
     def __init__(self, pretrained_model, tokenizer, args):
         super(ModelMultitaskBinary, self).__init__()
         self.tokenizer = tokenizer
@@ -51,58 +50,7 @@ class ModelMultitaskBinary(nn.Module):
         for j in range(self.args.n_tasks):
             self.multi_summary_pred_idx[j] = []
             self.multi_summary_preds[j] = []
-
-    def display_selected_idx(self):
-        print("\nStatistics on sampled candidates:")
-        n_methods = len(self.args.generation_methods)
-        selected_methods = {}
-        for i in range(len(self.selected_idx)):
-            idx = self.selected_idx[i]
-            method = int(idx / self.args.num_beams)
-            if not(method in selected_methods.keys()):
-                selected_methods[method] = 0
-            selected_methods[method] += 1
-        for method in selected_methods.keys():
-            print("Generation method {}, # selected candidates: {} ({:.4f}%)".format(
-                method, selected_methods[method], 100 * selected_methods[method] / len(self.selected_idx)
-            ))
-
-    def display_training_labels(self):
-        print("\nStatistics on training labels:")
-        for j in range(self.args.n_tasks):
-            s_ori_pos_j = np.sum(self.original_training_labels[j])
-            s_pos_j = np.sum(self.training_labels[j])
-            m_pos_j = 100 * np.mean(self.training_labels[j]) / (self.args.n_positives + self.args.n_negatives)
-            m_label_j = np.mean(self.training_scores[j])
-            m_hits_j = 100 * np.mean(self.training_hits[j])
-            s_hits_j = np.sum(self.training_hits[j])
-            print("Task {}, # original pos: {} / {} batches // # pos: {} / {} batches, % pos: {:.4f} // mean of training label: {:.4f} // % hitting the max: {:.4f}, count: {} / {}".format(
-                j, s_ori_pos_j, len(self.training_labels[j]),  s_pos_j, len(self.training_labels[j]), m_pos_j, m_label_j, m_hits_j, s_hits_j, len(self.training_hits[j])
-            ))
-
-    def display_multi_summary_predictions(self):
-        print("\nMulti-summary evaluation:")
-        all_ms = []
-        for j in range(self.args.n_tasks):
-            self.multi_summary_pred_idx[j] = np.array(self.multi_summary_pred_idx[j])
-            self.multi_summary_preds[j] = np.array(self.multi_summary_preds[j])
-            m_j = np.mean(self.multi_summary_preds[j])
-            all_ms.append(m_j)
-            print("Task {}, prediction is {:.4f}".format(j, m_j))
-        print("Mean over tasks: {:.4f}".format(np.mean(all_ms)))
-        intersections = []
-        correlations = []
-        for j in range(self.args.n_tasks):
-            for k in range(self.args.n_tasks):
-                if k != j:
-                    intersect = 100 * np.mean(self.multi_summary_pred_idx[j] == self.multi_summary_pred_idx[k])
-                    intersections.append(intersect)
-                    corr, p = pearsonr(self.multi_summary_pred_idx[j], self.multi_summary_pred_idx[k])
-                    correlations.append(corr)
-        m_intersection = np.mean(intersections)
-        m_corr = np.mean(correlations)
-        print("Mean intersection between pairs of pred idx: {:.4f}, mean Pearson correlation: {:.4f}".format(m_intersection, m_corr))
-            
+ 
     def forward(self, mode, text_and_summaries_ids, text_and_summaries_mask, scores):
         loss = torch.tensor(0.0).to(self.pretrained_model.device)
         accuracy = [0 for j in range(self.args.n_tasks)]
