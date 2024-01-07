@@ -2,9 +2,9 @@ python main_candidate_generation.py \
 --dataset reddit \
 --model_type pegasus \
 --model google/pegasus-large \
---model_name pegasus_unsupervised \
+--model_name pegasus_reddit_train_1 \
 --cache_dir ../../../hf_models/pegasus-large \
---load_model False \
+--load_model True \
 --val_dataset val \
 --inference_bs 2 \
 --save_summaries True \

@@ -4,9 +4,7 @@ import argparse
 import pickle
 import sys
 import gc
-
 sys.path.append("/data/mathieu/SummaReranker/src/") # todo: change to your folder path
-
 from time import time 
 from nltk.tokenize import sent_tokenize
 from tqdm import tqdm
@@ -17,7 +15,6 @@ from bert_score import score as bertscore_score
 from common.utils import *
 from common.bart_score import BARTScorer
 from common.evaluation import overall_eval
-
 
 
 parser = argparse.ArgumentParser()
@@ -34,9 +31,8 @@ parser.add_argument('--generation_method', type = str, default = "diverse_beam_s
 parser.add_argument('--val_size', type = int, default = -1)
 
 # model
-parser.add_argument('--model_name', type = str, default = "pegasus_unsupervised",
-                    choices = ["pegasus_unsupervised", "bart_unsupervised",
-                    "pegasus_cnndm_first_half_shuffled_1", "pegasus_cnndm_second_half_shuffled_1", "pegasus_cnndm", 
+parser.add_argument('--model_name', type = str, default = "pegasus_reddit_train_1",
+                    choices = ["pegasus_cnndm_first_half_shuffled_1", "pegasus_cnndm_second_half_shuffled_1", "pegasus_cnndm",
                     "bart_cnndm_first_half_shuffled_1", "bart_cnndm_second_half_shuffled_1", "bart_cnndm",
                     "pegasus_xsum_first_half_shuffled_1", "pegasus_xsum_second_half_shuffled_1", "pegasus_xsum", 
                     "bart_xsum_first_half_shuffled_1", "bart_xsum_second_half_shuffled_1", "bart_xsum", 
@@ -49,19 +45,19 @@ parser.add_argument('--label_metric', type = str, default = "rouge_1",
                     choices = ["mean_rouge", "rouge_1", "rouge_2", "rouge_l", "bertscore", "bartscore"])
 
 # evaluation
-parser.add_argument('--stemmer', type = bool, default = True)
+parser.add_argument('--stemmer', type = boolean_string, default = True)
 
 # export
-parser.add_argument('--save_scores', type = bool, default = False)
+parser.add_argument('--save_scores', type = boolean_string, default = False)
 
 # metrics
-parser.add_argument('--eval_top_candidate', type = bool, default = True)
-parser.add_argument('--eval_oracle', type = bool, default = True)
-parser.add_argument('--eval_rouge', type = bool, default = True)
-parser.add_argument('--eval_bertscore', type = bool, default = False)
-parser.add_argument('--eval_bartscore', type = bool, default = False)
-parser.add_argument('--eval_new_ngram', type = bool, default = False)
-parser.add_argument('--eval_rouge_text', type = bool, default = False)
+parser.add_argument('--eval_top_candidate', type = boolean_string, default = True)
+parser.add_argument('--eval_oracle', type = boolean_string, default = True)
+parser.add_argument('--eval_rouge', type = boolean_string, default = True)
+parser.add_argument('--eval_bertscore', type = boolean_string, default = False)
+parser.add_argument('--eval_bartscore', type = boolean_string, default = False)
+parser.add_argument('--eval_new_ngram', type = boolean_string, default = False)
+parser.add_argument('--eval_rouge_text', type = boolean_string, default = False)
 
 args = parser.parse_args()
 
@@ -84,7 +80,6 @@ args.clean_n = clean_ns[idx]
 
 print("*"*50)
 print(args)
-
 
 
 def main(args):

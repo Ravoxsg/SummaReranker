@@ -1,7 +1,5 @@
 import torch
-
 from time import time
-
 
 
 class MultitaskRerankingDataset:

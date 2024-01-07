@@ -4,13 +4,11 @@ import argparse
 import sys
 import time
 import torch
-
 sys.path.append("/data/mathieu/SummaReranker/src/")
-
 from tqdm import tqdm
 from transformers import RobertaTokenizerFast, RobertaModel
 
-from common.utils import seed_everything
+from common.utils import seed_everything, boolean_string
 from common.evaluation import *
 from common.data_scored import load_data
 from utils import *
@@ -18,56 +16,55 @@ from dataset import MultitaskRerankingDataset
 from model import ModelMultitaskBinary
 
 
-
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--seed', type=int, default = 42)
-parser.add_argument('--cuda', type=bool, default = True)
+parser.add_argument('--seed', type = int, default = 42)
+parser.add_argument('--cuda', type = boolean_string, default = True)
 
 # data
-parser.add_argument('--dataset', type=str, default = "reddit", 
+parser.add_argument('--dataset', type = str, default = "reddit",
                     choices= ["cnndm", "xsum", "reddit"])
-parser.add_argument('--generation_methods_str', type=str, default = "diverse_beam_search")
-parser.add_argument('--scoring_methods_str', type=str, default = "rouge_1+rouge_2+rouge_l")
-parser.add_argument('--sep_symbol', type=str, default = "[SEP]")
-parser.add_argument('--val_dataset', type=str, default = "val", choices = ["val", "test"])
-parser.add_argument('--max_val_size', type=int, default = 300)
+parser.add_argument('--generation_methods_str', type = str, default = "diverse_beam_search")
+parser.add_argument('--scoring_methods_str', type = str, default = "rouge_1+rouge_2+rouge_l")
+parser.add_argument('--sep_symbol', type = str, default = "[SEP]")
+parser.add_argument('--val_dataset', type = str, default = "val", choices = ["val", "test"])
+parser.add_argument('--max_val_size', type = int, default = 300)
 
 # base model
 parser.add_argument('--model_name', type = str, default = "pegasus_unsupervised",
                     choices = ["pegasus_unsupervised", "pegasus_cnndm", "bart_cnndm",
                     "pegasus_xsum", "bart_xsum", "pegasus_reddit_train_1", "bart_reddit"])
-parser.add_argument('--num_beams', type=int, default = 15)
+parser.add_argument('--num_beams', type = int, default = 15)
 
 # model
-parser.add_argument('--sharp_pos', type=bool, default = False)
-parser.add_argument('--model', type=str, default = "roberta-large")  
-parser.add_argument('--cache_dir', type=str, default = "../../../hf_models/roberta-large/")
-parser.add_argument('--hidden_size', type=int, default = 1024) 
-parser.add_argument('--non_linear_repres', type=bool, default = True)
-parser.add_argument('--use_shared_bottom', type = bool, default = True)
+parser.add_argument('--sharp_pos', type = boolean_string, default = False)
+parser.add_argument('--model', type = str, default = "roberta-large")
+parser.add_argument('--cache_dir', type = str, default = "../../../hf_models/roberta-large/")
+parser.add_argument('--hidden_size', type = int, default = 1024)
+parser.add_argument('--non_linear_repres', type = boolean_string, default = True)
+parser.add_argument('--use_shared_bottom', type = boolean_string, default = True)
 parser.add_argument('--bottom_hidden_size', type = int, default = 1024)
-parser.add_argument('--num_experts', type=int, default = 6)
-parser.add_argument('--k', type=int, default = 3)
-parser.add_argument('--use_aux_loss', type = bool, default = False)
+parser.add_argument('--num_experts', type = int, default = 6)
+parser.add_argument('--k', type = int, default = 3)
+parser.add_argument('--use_aux_loss', type = boolean_string, default = False)
 parser.add_argument('--expert_hidden_size', type = int, default = 1024)
 parser.add_argument('--tower_hidden_size', type = int, default = 1024)
-parser.add_argument('--load_model', type=bool, default = True)
-parser.add_argument('--load_model_path', type=str, default = "/data/mathieu/2nd_stage_summarization/4_supervised_multitask_reranking/saved_models/reddit/multitask_3_tasks_ablation_5/checkpoint-1000/pytorch_model.bin")
+parser.add_argument('--load_model', type = boolean_string, default = True)
+parser.add_argument('--load_model_path', type = str, default = "/data/mathieu/2nd_stage_summarization/4_supervised_multitask_reranking/saved_models/reddit/multitask_3_tasks_ablation_5/checkpoint-1000/pytorch_model.bin")
 # todo: change the path to where you saved the SummaReranker checkpoint!
 
 # optimization
-parser.add_argument('--inference_bs', type=int, default = 60)
+parser.add_argument('--inference_bs', type = int, default = 60)
 
 # generation
-parser.add_argument('--stemmer', type = bool, default = True)
+parser.add_argument('--stemmer', type = boolean_string, default = True)
 
 # metrics
-parser.add_argument('--eval_rouge', type = bool, default = True)
-parser.add_argument('--eval_bertscore', type = bool, default = True)
-parser.add_argument('--eval_bartscore', type = bool, default = True)
-parser.add_argument('--eval_new_ngram', type = bool, default = True)
-parser.add_argument('--eval_rouge_source', type = bool, default = False)
+parser.add_argument('--eval_rouge', type = boolean_string, default = True)
+parser.add_argument('--eval_bertscore', type = boolean_string, default = True)
+parser.add_argument('--eval_bartscore', type = boolean_string, default = True)
+parser.add_argument('--eval_new_ngram', type = boolean_string, default = True)
+parser.add_argument('--eval_rouge_source', type = boolean_string, default = False)
 
 args = parser.parse_args()
 args.generation_methods = args.generation_methods_str.split("+")
@@ -95,7 +92,6 @@ args.clean_n = clean_ns[idx]
 
 print("*" * 50)
 print(args)
-
 
 
 def main(args):

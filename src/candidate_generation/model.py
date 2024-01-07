@@ -1,13 +1,10 @@
 import torch
 import torch.nn as nn
 import numpy as np
-
 from time import time
 
 
-
 class FTModel(nn.Module):
-
     def __init__(self, pretrained_model, args):
 
         super(FTModel, self).__init__()

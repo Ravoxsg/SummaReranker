@@ -2,7 +2,6 @@ import numpy as np
 import torch
 
 
-
 def candidate_subsampling(mode, ids, masks, scores, labels, args):
     selected_idx = list(range(len(ids)))
     # remove duplicates

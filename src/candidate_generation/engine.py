@@ -1,11 +1,8 @@
 import pickle
 import torch
-import gc 
-
+import gc
 from tqdm import tqdm
-
 from transformers import BeamSearchScorer, LogitsProcessorList, MinLengthLogitsProcessor, HammingDiversityLogitsProcessor
-
 
 
 def get_summaries(tokenizer, val_loader, model, device, args):

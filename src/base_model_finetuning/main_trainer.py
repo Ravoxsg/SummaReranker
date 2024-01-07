@@ -4,9 +4,7 @@ import argparse
 import time
 import torch.nn as nn
 import sys
-
 sys.path.append("/data/mathieu/SummaReranker/src/")
-
 from tqdm import tqdm
 from torch.utils.data import DataLoader, Dataset, RandomSampler, SequentialSampler
 from torch.utils.data.distributed import DistributedSampler
@@ -14,6 +12,7 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Un
 from transformers import Trainer, TrainingArguments, Seq2SeqTrainingArguments, default_data_collator
 
 from common.summary_processing import pre_rouge_processing
+from common.utils import *
 from utils import *
 from data import *
 from dataset import *
@@ -22,34 +21,33 @@ from transfer_utils import *
 from model import FTModel
 
 
-
 parser = argparse.ArgumentParser()
 
 # general
 parser.add_argument('--seed', type=int, default = 42)
-parser.add_argument('--cuda', type=bool, default = True)
-parser.add_argument('--mp', type=bool, default = False)
-parser.add_argument('--debug', type=bool, default = False)
+parser.add_argument('--cuda', type=boolean_string, default = True)
+parser.add_argument('--mp', type=boolean_string, default = False)
+parser.add_argument('--debug', type=boolean_string, default = False)
 parser.add_argument('--debug_size', type=int, default = 20)
 parser.add_argument('--deepspeed', type=str, default = None)  # "ds_config.json"
 parser.add_argument('--sharded_ddp', type=str, default = "simple")  # ["", "simple"]
 parser.add_argument("--local_rank", type=int, default = 0, help="Local rank. Necessary for using the torch.distributed.launch utility.")
 
 # task
-parser.add_argument('--train', type=bool, default = True)
+parser.add_argument('--train', type=boolean_string, default = True)
 
 # data
 parser.add_argument('--dataset', type=str, default = "reddit",
                     choices=["cnndm", "xsum", "reddit"])
 # train
-parser.add_argument('--train_dataset', type = str, default = "train")
+parser.add_argument('--train_dataset', type=str, default = "train")
 parser.add_argument('--max_train_size', type=int, default = 1000000)
 # val
-parser.add_argument('--val_dataset', type = str, default = "val")
-parser.add_argument('--max_val_size', type = int, default = 1000000)
+parser.add_argument('--val_dataset', type=str, default = "val")
+parser.add_argument('--max_val_size', type=int, default = 1000000)
 # test
-parser.add_argument('--test_dataset', type = str, default = "test")
-parser.add_argument('--max_test_size', type = int, default = 1000000)
+parser.add_argument('--test_dataset', type=str, default = "test")
+parser.add_argument('--max_test_size', type=int, default = 1000000)
 
 # model
 parser.add_argument('--model_type', type=str, default = "pegasus",
@@ -58,7 +56,7 @@ parser.add_argument('--model', type=str, default = "google/pegasus-large",
                     choices=["google/pegasus-large", "facebook/bart-large"])
 parser.add_argument('--hidden_size', type=int, default = 768)
 parser.add_argument('--cache_dir', type=str, default = "../../../hf_models/pegasus-large/") # in ["pegasus-large", "bart-large"]
-parser.add_argument('--load_model', type=bool, default = False)
+parser.add_argument('--load_model', type=boolean_string, default = False)
 parser.add_argument('--load_model_path', type=str, default = "")
 
 # optimization
@@ -69,20 +67,20 @@ parser.add_argument('--gradient_clipping', type=float, default = 10e10)
 parser.add_argument('--label_smoothing', type=float, default = 0.1)
 
 # generation
-parser.add_argument('--repetition_penalty', type = float, default = 1.0)
+parser.add_argument('--repetition_penalty', type=float, default = 1.0)
 
 # evaluation
-parser.add_argument('--eval_epoch_0', type = bool, default = True)
+parser.add_argument('--eval_epoch_0', type=boolean_string, default = True)
 parser.add_argument('--evaluation_strategy', type=str, default = "steps")
 parser.add_argument('--evaluation_method', type=str, default = "generation",
                     choices=["generation", "loss"])
-parser.add_argument('--eval_test', type=bool, default = False)
+parser.add_argument('--eval_test', type=boolean_string, default = False)
 parser.add_argument('--eval_every', type=int, default=-1)
 
 # summaries
-parser.add_argument('--generate_summaries', type=bool, default = False)
-parser.add_argument('--stemmer', type=bool, default = True)
-parser.add_argument('--show_summaries', type=bool, default = True)
+parser.add_argument('--generate_summaries', type=boolean_string, default = False)
+parser.add_argument('--stemmer', type=boolean_string, default = True)
+parser.add_argument('--show_summaries', type=boolean_string, default = True)
 parser.add_argument('--show_summaries_count', type=int, default = 1) # batches
 
 # export
@@ -165,7 +163,6 @@ if args.debug:
 
 print("*" * 50)
 print(args)
-
 
 
 def main(args):

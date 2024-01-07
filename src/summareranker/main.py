@@ -5,17 +5,14 @@ import torch
 import torch.nn as nn
 import datasets
 import time
-
 import sys
-
 sys.path.append("/data/mathieu/SummaReranker/src/")
-
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
 from transformers import Trainer, TrainingArguments, default_data_collator
 from torch.utils.data.dataloader import DataLoader
 from transformers.file_utils import is_datasets_available
 
-from common.utils import seed_everything, check_scores
+from common.utils import seed_everything, check_scores, boolean_string
 from common.data_scored import load_data
 from utils import *
 from dataset import MultitaskRerankingDatasetTrain
@@ -23,12 +20,11 @@ from training_utils import *
 from model import ModelMultitaskBinary
 
 
-
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--seed', type=int, default=42)
-parser.add_argument('--cuda', type=bool, default=True)
-parser.add_argument('--fp16', type=bool, default=True)
+parser.add_argument('--cuda', type=boolean_string, default=True)
+parser.add_argument('--fp16', type=boolean_string, default=True)
 parser.add_argument('--deepspeed', type=str, default=None) # "ds_config.json"
 parser.add_argument('--sharded_ddp', type=str, default="simple") # ["", "simple"]
 parser.add_argument("--local_rank", type=int, default=0, help="Local rank. Necessary for using the torch.distributed.launch utility.")
@@ -56,41 +52,41 @@ parser.add_argument('--num_beams', type=int, default=15)
 
 # model
 # candidate selection
-parser.add_argument('--filter_out_duplicates', type=bool, default=True)
-parser.add_argument('--prune_candidates', type=bool, default=True)
+parser.add_argument('--filter_out_duplicates', type=boolean_string, default=True)
+parser.add_argument('--prune_candidates', type=boolean_string, default=True)
 parser.add_argument('--sampling_strat', type=str, default="bottom",
                     choices=["random", "bottom"])
 parser.add_argument('--n_positives', type=int, default=1)
 parser.add_argument('--n_negatives', type=int, default=1)
 parser.add_argument('--max_n_candidates', type=int, default=2)
-parser.add_argument('--sharp_pos', type=bool, default=False)
+parser.add_argument('--sharp_pos', type=boolean_string, default=False)
 # encoder
 parser.add_argument('--model', type=str, default="roberta-large")
 parser.add_argument('--model_type', type=str, default="roberta",
                     choices=["bert", "roberta"])
 parser.add_argument('--cache_dir', type=str, default="../../../hf_models/roberta-large/")
 parser.add_argument('--hidden_size', type=int, default=1024) # 768 / 1024
-parser.add_argument('--non_linear_repres', type=bool, default=True)
+parser.add_argument('--non_linear_repres', type=boolean_string, default=True)
 # tackle source length encoding
-parser.add_argument('--separate_source_encoding', type=bool, default=False)
+parser.add_argument('--separate_source_encoding', type=boolean_string, default=False)
 # shared bottom
-parser.add_argument('--use_shared_bottom', type=bool, default=True)
+parser.add_argument('--use_shared_bottom', type=boolean_string, default=True)
 parser.add_argument('--bottom_hidden_size', type=int, default=1024)
 # experts
 parser.add_argument('--num_experts', type=int, default=6)
-# parser.add_argument('--noisy_gating', type=bool, default=True)
+# parser.add_argument('--noisy_gating', type=boolean_string, default=True)
 parser.add_argument('--k', type=int, default=3)
-parser.add_argument('--use_aux_loss', type=bool, default=False)
+parser.add_argument('--use_aux_loss', type=boolean_string, default=False)
 parser.add_argument('--expert_hidden_size', type=int, default=1024)
 # tower
 parser.add_argument('--tower_hidden_size', type=int, default=1024)
 
 # optimization
-parser.add_argument('--train', type=bool, default=True)
-parser.add_argument('--shuffle_train', type=bool, default=True)
+parser.add_argument('--train', type=boolean_string, default=True)
+parser.add_argument('--shuffle_train', type=boolean_string, default=True)
 parser.add_argument('--optimizer', type=str, default="adam")
 parser.add_argument('--n_epochs', type=int, default=5)
-parser.add_argument('--adafactor', type=bool, default=True)
+parser.add_argument('--adafactor', type=boolean_string, default=True)
 parser.add_argument('--train_bs', type=int, default=1)
 parser.add_argument('--inference_bs', type=int, default=60)
 parser.add_argument('--gradient_accumulation_steps', type=int, default=64)
@@ -102,14 +98,14 @@ parser.add_argument('--scheduler', type=str, default="linear",
 parser.add_argument('--warmup_ratio', type=float, default=0.05)
 
 # evaluation
-parser.add_argument('--eval_epoch_0', type=bool, default=True)
+parser.add_argument('--eval_epoch_0', type=boolean_string, default=True)
 parser.add_argument('--evaluation_strategy', type=str, default="steps")
 parser.add_argument('--n_checkpoints_to_save', type=int, default=2)
 parser.add_argument('--metric_for_best_model', type=str, default="overall_sum",
                     choices=["prediction_sum", "overall_sum"])
 
 # export
-parser.add_argument('--save_model', type=bool, default=True)
+parser.add_argument('--save_model', type=boolean_string, default=True)
 parser.add_argument('--save_model_path', type=str, default="saved_models/reddit/model_1")
 
 args = parser.parse_args()
@@ -163,7 +159,6 @@ args.clean_n = clean_ns[idx]
 
 print("*" * 50)
 print(args)
-
 
 
 def main(args):
@@ -281,7 +276,6 @@ def main(args):
     # training loop
     if args.train:
         trainer.train()
-        model.display_training_labels()
     else:
         if args.load_model:
             model.load_state_dict(torch.load(args.load_model_path))

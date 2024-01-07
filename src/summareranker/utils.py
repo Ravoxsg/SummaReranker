@@ -1,7 +1,6 @@
 import numpy as np
 
 
-
 def rank_array(t):
     y = np.copy(t)
     y.sort()

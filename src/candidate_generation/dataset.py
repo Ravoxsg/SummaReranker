@@ -1,8 +1,6 @@
 
 
-
 class Dataset:
-
     def __init__(self, mode, tokenizer, texts, summaries, args):
         self.mode = mode
         self.tokenizer = tokenizer

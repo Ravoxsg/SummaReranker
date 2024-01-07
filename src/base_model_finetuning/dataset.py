@@ -2,7 +2,6 @@ import numpy as np
 import torch
 
 
-
 class TrainFTDataset:
     def __init__(self, mode, tokenizer, texts, summaries, args):
         self.mode = mode
