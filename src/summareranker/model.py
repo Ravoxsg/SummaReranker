@@ -120,6 +120,10 @@ class ModelMultitaskBinary(nn.Module):
 
             # labels construction
             scores_i = scores[i]
+            text_and_summaries_ids_i = text_and_summaries_ids_i[:14]
+            text_and_summaries_mask_i = text_and_summaries_mask_i[:14]
+            print(scores_i.shape)
+            scores_i = scores_i[:,:14]
             original_scores_i = scores_i.clone().detach()
             labels_i = torch.zeros(scores_i.shape, device = self.pretrained_model.device)
             for j in range(self.args.n_tasks):
@@ -139,10 +143,12 @@ class ModelMultitaskBinary(nn.Module):
 
             # model output
             # LM encoding
+            print(text_and_summaries_ids_i.shape, text_and_summaries_mask_i.shape, scores_i.shape, labels_i.shape)
             outputs_i = self.pretrained_model(
-                input_ids = text_and_summaries_ids_i, attention_mask = text_and_summaries_mask_i, output_hidden_states = True
+                    input_ids = text_and_summaries_ids_i, attention_mask = text_and_summaries_mask_i, output_hidden_states = True
             )
             encs = outputs_i["last_hidden_state"]
+            print(encs.shape)
             encs = encs[:, 0, :]
             # shared bottom
             if self.args.use_shared_bottom:

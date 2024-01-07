@@ -14,7 +14,7 @@ from model import ModelMultitaskBinary
 
 parser = argparse.ArgumentParser()
 args = parser.parse_args()
-args.device = torch.device("cpu")
+args.device = torch.device("cuda")
 args.generation_methods = ["diverse_beam_search"]
 args.num_beams = 15
 args.scoring_methods = ["rouge_1", "rouge_2", "rouge_l"]
@@ -56,15 +56,15 @@ print(text)
 base_model_name = "google/pegasus-cnn_dailymail"
 base_tokenizer = PegasusTokenizer.from_pretrained(base_model_name, cache_dir="/data/mathieu/hf_models/pegasus-large-cnndm/")
 base_model = PegasusForConditionalGeneration.from_pretrained(base_model_name, cache_dir="/data/mathieu/hf_models/pegasus-large-cnndm/")
-base_model = base_model.cuda()
+#base_model = base_model.cuda()
 
 # candidates
 tok_text = base_tokenizer(text, return_tensors="pt", padding="max_length", max_length=1024)
 tok_text["input_ids"] = tok_text["input_ids"][:, :1024]
 tok_text["attention_mask"] = tok_text["attention_mask"][:, :1024]
 generated = base_model.generate(
-    input_ids=tok_text["input_ids"].cuda(),
-    attention_mask=tok_text["attention_mask"].cuda(),
+    input_ids=tok_text["input_ids"],#.cuda(),
+    attention_mask=tok_text["attention_mask"],#.cuda(),
     num_beams=15,
     num_beam_groups=15,
     num_return_sequences=15,
