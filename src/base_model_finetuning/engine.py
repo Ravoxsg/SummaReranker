@@ -1,13 +1,10 @@
 import gc
 import numpy as np
 import sys
-
 sys.path.append("/data/mathieu/SummaReranker/src/")
-
 from tqdm import tqdm
 
 from common.evaluation import overall_eval
-
 
 
 def validate(mode, loader, all_losses, tokenizer, model, device, args):

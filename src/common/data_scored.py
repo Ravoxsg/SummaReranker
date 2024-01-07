@@ -1,8 +1,6 @@
 import pickle
 import os
-
 from tqdm import tqdm
-
 
 
 def load_data(set, size, args, individual_txt=False, train=False):

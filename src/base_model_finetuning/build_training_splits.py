@@ -4,14 +4,11 @@ import argparse
 import sys
 import numpy as np
 import pickle
-
 sys.path.append("/data/mathieu/2nd_stage_summarization/")
-
 from tqdm import tqdm
 from shutil import copyfile
 
 from common.utils import seed_everything
-
 
 
 parser = argparse.ArgumentParser()
@@ -33,7 +30,6 @@ args.individual_files = highlights[idx]
 
 print("*"*50)
 print(args)
-
 
 
 def main(args):

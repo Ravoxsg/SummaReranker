@@ -4,7 +4,6 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration, \
     BartTokenizerFast, BartForConditionalGeneration
 
 
-
 def build_tokenizer(args):
     tokenizer = None
     if args.model_type.startswith("t5"):

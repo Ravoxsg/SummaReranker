@@ -2,23 +2,10 @@ import random
 import os
 import numpy as np
 import torch
-
 from rouge_score import rouge_scorer
 
 
-
-def seed_everything(seed=42):
-
-    random.seed(seed)
-    os.environ['PYTHONHASHSEED'] = str(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.backends.cudnn.deterministic = True
-
-
 def check_data_pipe(loaders):
-
     for loader in loaders:
         for idx, batch in enumerate(loader):
             print("*"*50)
@@ -30,14 +17,12 @@ def check_data_pipe(loaders):
 
 
 def display_losses(mode, losses):
-
     best_loss = np.min(np.array(losses))
     best_loss_idx = np.argmin(np.array(losses)) + 1
     print("Current {} loss is {:.4f}, best {} loss is {:.4f} achieved at iter {} / {}".format(mode, losses[-1], mode, best_loss, best_loss_idx, len(losses)))
 
 
 def display_scores(mode, scores):
-
     for k in scores.keys():
         scores_k = scores[k]
         if "loss" in k:

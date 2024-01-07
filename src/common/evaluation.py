@@ -1,14 +1,11 @@
 from __future__ import print_function, unicode_literals, division
-
 import numpy as np
-
 from nltk.tokenize import word_tokenize, sent_tokenize
 from rouge_score import rouge_scorer
 from bert_score import score
 from common.bart_score import BARTScorer
 from scipy.stats import pearsonr
 from common.summary_processing import pre_rouge_processing
-
 
 
 def overall_eval(val_texts, val_summaries, val_labels, args):

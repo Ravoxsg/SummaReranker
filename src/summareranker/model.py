@@ -9,7 +9,6 @@ from candidate_sampling import candidate_subsampling
 from model_moe import MoE, MLPTower, MLPExpert
 
 
-
 class ModelMultitaskBinary(nn.Module):
     def __init__(self, pretrained_model, tokenizer, args):
         super(ModelMultitaskBinary, self).__init__()

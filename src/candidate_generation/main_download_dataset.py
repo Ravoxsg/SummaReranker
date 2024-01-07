@@ -7,11 +7,10 @@ import random
 import argparse
 import sys
 import datasets
-
 from tqdm import tqdm
-
 sys.path.append("/data/mathieu/SummaReranker/src/") # todo: change to your folder path
 
+from common.utils import seed_everything
 
 
 parser = argparse.ArgumentParser()
@@ -45,7 +44,6 @@ print(args)
 
 sets = [("validation", "val"), ("test", "test"), ("train", "train")]
 contents = [(args.text_key, "text"), (args.summary_key, "summary")]
-
 
 
 def main(args):
